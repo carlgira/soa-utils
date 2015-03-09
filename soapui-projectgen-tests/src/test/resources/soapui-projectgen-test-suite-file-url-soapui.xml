@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="soapui-projectgen-test-suite-file-url" resourceRoot="" soapui-version="4.5.1-SNAPSHOT" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="HelloWorld1SoapBinding" type="wsdl" bindingName="{http://helloworld1.webservice.moodykettle.com}HelloWorld1SoapBinding" soapVersion="1_1" anonymous="optional" definition="file:/Users/carlgira/Documents/soapui-projectgen-tests/src/main/resources/services/HelloWorld1.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/Users/carlgira/Documents/soapui-projectgen-tests/src/main/resources/services/HelloWorld1.wsdl"><con:part><con:url>file:/Users/carlgira/Documents/soapui-projectgen-tests/src/main/resources/services/HelloWorld1.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://helloworld1.webservice.moodykettle.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://helloworld1.webservice.moodykettle.com" xmlns:intf="http://helloworld1.webservice.moodykettle.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+  <wsdl:types>
+    <schema elementFormDefault="qualified" targetNamespace="http://helloworld1.webservice.moodykettle.com" xmlns="http://www.w3.org/2001/XMLSchema">
+      <element name="sayHello">
+        <complexType>
+          <sequence>
+            <element name="name" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="sayHelloResponse">
+        <complexType>
+          <sequence>
+            <element name="sayHelloReturn" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="sayHi">
+        <complexType>
+          <sequence>
+            <element name="name" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="sayHiResponse">
+        <complexType>
+          <sequence>
+            <element name="sayHiReturn" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="sayHelloResponse">
+    <wsdl:part element="impl:sayHelloResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHelloRequest">
+    <wsdl:part element="impl:sayHello" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHiResponse">
+    <wsdl:part element="impl:sayHiResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHiRequest">
+    <wsdl:part element="impl:sayHi" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="HelloWorld1">
+    <wsdl:operation name="sayHello">
+      <wsdl:input message="impl:sayHelloRequest" name="sayHelloRequest"></wsdl:input>
+      <wsdl:output message="impl:sayHelloResponse" name="sayHelloResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHi">
+      <wsdl:input message="impl:sayHiRequest" name="sayHiRequest"></wsdl:input>
+      <wsdl:output message="impl:sayHiResponse" name="sayHiResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HelloWorld1SoapBinding" type="impl:HelloWorld1">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="sayHello">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="sayHelloRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sayHelloResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sayHi">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="sayHiRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sayHiResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HelloWorld1Service">
+    <wsdl:port binding="impl:HelloWorld1SoapBinding" name="HelloWorld1">
+      <wsdlsoap:address location="http://localhost:8080/WebService/services/HelloWorld1"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/WebService/services/HelloWorld1</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="sayHello" bindingOperationName="sayHello" type="Request-Response" outputName="sayHelloResponse" inputName="sayHelloRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Req_sayHello"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://${#Project#server.hostname}:${#Project#server.listen.port}${HelloWorld1SoapBinding.path}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hel="http://helloworld1.webservice.moodykettle.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <hel:sayHello>
+         <hel:name>?</hel:name>
+      </hel:sayHello>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://helloworld1.webservice.moodykettle.com/HelloWorld1/sayHelloRequest"/></con:call></con:operation><con:operation isOneWay="false" action="" name="sayHi" bindingOperationName="sayHi" type="Request-Response" outputName="sayHiResponse" inputName="sayHiRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Req_sayHi"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://${#Project#server.hostname}:${#Project#server.listen.port}${HelloWorld1SoapBinding.path}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hel="http://helloworld1.webservice.moodykettle.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <hel:sayHi>
+         <hel:name>?</hel:name>
+      </hel:sayHi>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://helloworld1.webservice.moodykettle.com/HelloWorld1/sayHiRequest"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="HelloWorldSoapBinding" type="wsdl" bindingName="{http://helloworld.webservice.moodykettle.com}HelloWorldSoapBinding" soapVersion="1_1" anonymous="optional" definition="https://java-sample-programs.googlecode.com/svn-history/r15/trunk/WebService/WebContent/wsdl/HelloWorld.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="https://java-sample-programs.googlecode.com/svn-history/r15/trunk/WebService/WebContent/wsdl/HelloWorld.wsdl"><con:part><con:url>https://java-sample-programs.googlecode.com/svn-history/r15/trunk/WebService/WebContent/wsdl/HelloWorld.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://helloworld.webservice.moodykettle.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://helloworld.webservice.moodykettle.com" xmlns:intf="http://helloworld.webservice.moodykettle.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+  <wsdl:types>
+    <schema elementFormDefault="qualified" targetNamespace="http://helloworld.webservice.moodykettle.com" xmlns="http://www.w3.org/2001/XMLSchema">
+      <element name="sayHello">
+        <complexType>
+          <sequence>
+            <element name="name" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="sayHelloResponse">
+        <complexType>
+          <sequence>
+            <element name="sayHelloReturn" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="sayHelloResponse">
+    <wsdl:part element="impl:sayHelloResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="sayHelloRequest">
+    <wsdl:part element="impl:sayHello" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="HelloWorld">
+    <wsdl:operation name="sayHello">
+      <wsdl:input message="impl:sayHelloRequest" name="sayHelloRequest"></wsdl:input>
+      <wsdl:output message="impl:sayHelloResponse" name="sayHelloResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HelloWorldSoapBinding" type="impl:HelloWorld">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="sayHello">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="sayHelloRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="sayHelloResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HelloWorldService">
+    <wsdl:port binding="impl:HelloWorldSoapBinding" name="HelloWorld">
+      <wsdlsoap:address location="http://localhost:8080/WebService/services/HelloWorld"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/WebService/services/HelloWorld</con:endpoint></con:endpoints><con:operation isOneWay="false" action="" name="sayHello" bindingOperationName="sayHello" type="Request-Response" outputName="sayHelloResponse" inputName="sayHelloRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Req_sayHello"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://${#Project#server.hostname}:${#Project#server.listen.port}${HelloWorldSoapBinding.path}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hel="http://helloworld.webservice.moodykettle.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <hel:sayHello>
+         <hel:name>?</hel:name>
+      </hel:sayHello>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://helloworld.webservice.moodykettle.com/HelloWorld/sayHelloRequest"/></con:call></con:operation></con:interface><con:testSuite name="HelloWorld1SoapBinding_TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="sayHello_TestCase" searchProperties="true"><con:settings/><con:testStep type="request" name="sayHello_Step"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>HelloWorld1SoapBinding</con:interface><con:operation>sayHello</con:operation><con:request name="sayHello_Step"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://${#Project#server.hostname}:${#Project#server.listen.port}${HelloWorld1SoapBinding.path}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hel="http://helloworld1.webservice.moodykettle.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <hel:sayHello>
+         <hel:name>?</hel:name>
+      </hel:sayHello>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="Valid HTTP Status Codes" name="ValidHttpResponse"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://helloworld1.webservice.moodykettle.com/HelloWorld1/sayHelloRequest" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="sayHi_TestCase" searchProperties="true"><con:settings/><con:testStep type="request" name="sayHi_Step"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>HelloWorld1SoapBinding</con:interface><con:operation>sayHi</con:operation><con:request name="sayHi_Step"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://${#Project#server.hostname}:${#Project#server.listen.port}${HelloWorld1SoapBinding.path}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hel="http://helloworld1.webservice.moodykettle.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <hel:sayHi>
+         <hel:name>?</hel:name>
+      </hel:sayHi>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="Valid HTTP Status Codes" name="ValidHttpResponse"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://helloworld1.webservice.moodykettle.com/HelloWorld1/sayHiRequest" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite name="HelloWorldSoapBinding_TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="sayHello_TestCase" searchProperties="true"><con:settings/><con:testStep type="request" name="sayHello_Step"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>HelloWorldSoapBinding</con:interface><con:operation>sayHello</con:operation><con:request name="sayHello_Step"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://${#Project#server.hostname}:${#Project#server.listen.port}${HelloWorldSoapBinding.path}</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:hel="http://helloworld.webservice.moodykettle.com">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <hel:sayHello>
+         <hel:name>?</hel:name>
+      </hel:sayHello>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="Valid HTTP Status Codes" name="ValidHttpResponse"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://helloworld.webservice.moodykettle.com/HelloWorld/sayHelloRequest" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/><con:beforeRunScript>groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+def propFileName = context.expand( '${#Project#properties.file}' )
+file = new File(propFileName)
+props = new java.util.Properties ()
+props.load (new FileInputStream (file ))
+Enumeration e = props.propertyNames();
+while (e.hasMoreElements()) {
+String key = (String) e.nextElement();
+com.eviware.soapui.SoapUI.globalProperties.setPropertyValue( key, props.getProperty(key) )
+}
+return</con:beforeRunScript></con:soapui-project>
