@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<p:configjarSettings xmlns:p="http://www.bea.com/alsb/tools/configjar/config">
+  <p:source>
+    <p:project dir="."/>
+    <p:fileset>
+    	<p:exclude name="*/alsbdebug.xml" />
+    	<p:exclude name="*/configfwkdebug.xml" />
+    	<p:exclude name="*/pom.xml" />
+    	<p:exclude name="*/settings.xml" />
+    	<p:exclude name="*/.settings/**" />
+    	<p:exclude name="*/soapui-settings.xml" />
+    	<p:exclude name="*/target/**" />
+    	<p:exclude name="*/test/**" />
+    	<p:exclude name="*/security/**" />
+    	<p:exclude name="*/security/import.*" />
+    </p:fileset>
+  </p:source>
+  <p:configjar jar="./target/osb-soapui-test-1.0.0-SNAPSHOT.jar">
+   <p:resourceLevel/>
+  </p:configjar>
+</p:configjarSettings>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-fragment xmlns:ser="http://www.bea.com/wli/sb/services" xmlns:tran="http://www.bea.com/wli/sb/transports" xmlns:env="http://www.bea.com/wli/config/env" xmlns:http="http://www.bea.com/wli/sb/transports/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://www.bea.com/wli/sb/pipeline/config" xmlns:con1="http://www.bea.com/wli/sb/stages/config" xmlns:con2="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con3="http://www.bea.com/wli/sb/stages/routing/config">
+  <ser:coreEntry isProxy="true" isEnabled="true">
+    <ser:binding type="SOAP" isSoap12="false" xsi:type="con:SoapBindingType" xmlns:con="http://www.bea.com/wli/sb/services/bindings/config">
+      <con:wsdl ref="osb-soapui-test/proxy/wsdls/HelloWorld2"/>
+      <con:port>
+        <con:name>HelloWorld2</con:name>
+        <con:namespace>http://helloworld2.webservice.moodykettle.com</con:namespace>
+      </con:port>
+      <con:selector type="SOAP body"/>
+    </ser:binding>
+    <ser:monitoring isEnabled="false">
+      <ser:aggregationInterval>10</ser:aggregationInterval>
+      <ser:pipelineMonitoringLevel>Pipeline</ser:pipelineMonitoringLevel>
+    </ser:monitoring>
+    <ser:reporting>true</ser:reporting>
+    <ser:logging isEnabled="true">
+      <ser:logLevel>debug</ser:logLevel>
+    </ser:logging>
+    <ser:sla-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:sla-alerting>
+    <ser:pipeline-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:pipeline-alerting>
+    <ser:ws-policy>
+      <ser:binding-mode>wsdl-policy-attachments</ser:binding-mode>
+    </ser:ws-policy>
+  </ser:coreEntry>
+  <ser:endpointConfig>
+    <tran:provider-id>http</tran:provider-id>
+    <tran:inbound>true</tran:inbound>
+    <tran:URI>
+      <env:value>/osb-soapui-test/proxy/PS_HelloWorld2</env:value>
+    </tran:URI>
+    <tran:inbound-properties/>
+    <tran:all-headers>false</tran:all-headers>
+    <tran:provider-specific>
+      <http:inbound-properties/>
+    </tran:provider-specific>
+  </ser:endpointConfig>
+  <ser:router>
+    <con:pipeline type="request" name="PipelinePairNode1_request">
+      <con:stage name="stage1">
+        <con:context>
+          <con1:userNsDecl namespace="http://helloworld3.webservice.moodykettle.com" prefix="hw3"/>
+          <con1:varNsDecl namespace="http://helloworld2.webservice.moodykettle.com" prefix="hel"/>
+        </con:context>
+        <con:actions>
+          <con2:wsCallout>
+            <con1:id>_ActionId-4679686267545092198-5b9afe58.14c031d529d.-7f93</con1:id>
+            <con2:service xsi:type="ref:BusinessServiceRef" ref="osb-soapui-test/business/BS_HelloWorld3" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+            <con2:operation>sayHello</con2:operation>
+            <con2:request>
+              <con2:body>$req_hw3</con2:body>
+            </con2:request>
+            <con2:response>
+              <con2:body>res_hw3</con2:body>
+            </con2:response>
+            <con2:requestTransform>
+              <con2:assign varName="req_hw3">
+                <con1:id>_ActionId-4679686267545092198-5b9afe58.14c031d529d.-7d35</con1:id>
+                <con2:expr>
+                  <con1:xqueryTransform>
+                    <con1:resource ref="osb-soapui-test/xquery/hw2_to_hw3_req"/>
+                    <con1:param name="sayHello1">
+                      <con1:path>$body/hel:sayHello</con1:path>
+                    </con1:param>
+                  </con1:xqueryTransform>
+                </con2:expr>
+              </con2:assign>
+            </con2:requestTransform>
+            <con2:responseTransform>
+              <con2:replace contents-only="true" varName="body">
+                <con1:id>_ActionId-4679686267545092198-5b9afe58.14c031d529d.-7f16</con1:id>
+                <con2:location>
+                  <con1:xpathText>.</con1:xpathText>
+                </con2:location>
+                <con2:expr>
+                  <con1:xqueryTransform>
+                    <con1:resource ref="osb-soapui-test/xquery/hw3_to_hw4_req"/>
+                    <con1:param name="sayHelloResponse1">
+                      <con1:path>$res_hw3</con1:path>
+                    </con1:param>
+                  </con1:xqueryTransform>
+                </con2:expr>
+              </con2:replace>
+            </con2:responseTransform>
+          </con2:wsCallout>
+        </con:actions>
+      </con:stage>
+    </con:pipeline>
+    <con:pipeline type="response" name="PipelinePairNode1_response"/>
+    <con:flow>
+      <con:pipeline-node name="PipelinePairNode1">
+        <con:request>PipelinePairNode1_request</con:request>
+        <con:response>PipelinePairNode1_response</con:response>
+      </con:pipeline-node>
+      <con:route-node name="RouteNode1">
+        <con:context>
+          <con1:userNsDecl namespace="http://helloworld4.webservice.moodykettle.com" prefix="hw4"/>
+          <con1:varNsDecl namespace="http://helloworld2.webservice.moodykettle.com" prefix="hel"/>
+        </con:context>
+        <con:actions>
+          <con3:route>
+            <con1:id>_ActionId-4679686267545092198-5b9afe58.14c031d529d.-7fe0</con1:id>
+            <con3:service ref="osb-soapui-test/business/BS_HelloWorld4" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+            <con3:operation>sayHello</con3:operation>
+            <con3:outboundTransform/>
+            <con3:responseTransform>
+              <con2:replace contents-only="true" varName="body">
+                <con1:id>_ActionId-4679686267545092198-5b9afe58.14c031d529d.-7efc</con1:id>
+                <con2:location>
+                  <con1:xpathText>.</con1:xpathText>
+                </con2:location>
+                <con2:expr>
+                  <con1:xqueryTransform>
+                    <con1:resource ref="osb-soapui-test/xquery/hw4_to_hw2_resp"/>
+                    <con1:param name="sayHelloResponse1">
+                      <con1:path>$body/hw4:sayHelloResponse</con1:path>
+                    </con1:param>
+                  </con1:xqueryTransform>
+                </con2:expr>
+              </con2:replace>
+            </con3:responseTransform>
+          </con3:route>
+        </con:actions>
+      </con:route-node>
+    </con:flow>
+  </ser:router>
+</xml-fragment>
