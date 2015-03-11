@@ -38,3 +38,9 @@ The run-unit-test has two steps (soapui plugin executions)<br/>
 
 The reports of the tests are writen in the target directory
 
+
+To more detail see: http://carlgira.blogspot.com.es/2015/03/soapui-project-generator.html
+
+
+
+
