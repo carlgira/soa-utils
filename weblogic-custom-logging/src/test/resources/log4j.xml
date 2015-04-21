@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true"
+	xmlns:log4j='http://jakarta.apache.org/log4j/'>
+ 	
+ 	<!-- Appenders -->
+	<appender name="file-osb" class="org.apache.log4j.RollingFileAppender">
+	   <param name="append" value="true" />
+	   <param name="maxFileSize" value="10MB" />
+	   <param name="maxBackupIndex" value="5" />
+	   <param name="file" value="${test.log.dir}/mylogOSB.log" />
+	   <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" 
+			value="%m%n" />
+	   </layout>
+	</appender>
+	
+	<appender name="file-introScope" class="org.apache.log4j.RollingFileAppender">
+	   <param name="append" value="true" />
+	   <param name="maxFileSize" value="10MB" />
+	   <param name="maxBackupIndex" value="5" />
+	   <param name="file" value="${test.log.dir}/mylogIntroscope.log" />
+	   <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" 
+			value="%m%n" />
+	   </layout>
+	</appender>
+
+	<!--  Loggers -->
+	
+	<logger name="OSBServerLogger">
+        <level value="debug" />
+        <appender-ref ref="file-osb" />
+    </logger>
+    
+    <logger name="IntroScopeLogger">
+        <level value="debug" />
+        <appender-ref ref="file-introScope" />
+    </logger>
+ 
+</log4j:configuration>
