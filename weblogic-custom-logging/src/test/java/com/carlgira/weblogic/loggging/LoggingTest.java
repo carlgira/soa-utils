@@ -3,16 +3,12 @@ package com.carlgira.weblogic.loggging;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import com.carlgira.weblogic.loggging.LogHandler;
-
 import weblogic.logging.WLLevel;
 import weblogic.logging.WLLogRecord;
-
 import com.carlgira.weblogic.loggging.log4j.Log4jManager;
 import com.carlgira.weblogic.loggging.log4j.managers.OSBLogManager;
 import com.carlgira.weblogic.loggging.log4j.managers.OSBProxyLogManager;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Filter;
@@ -112,4 +108,3 @@ class FilterOSB_OHS implements Filter
 		return !(record.getMessage().contains("[OSB Tracing]") || record.getMessage().contains("IntroscopeAgent"));
 	}
 }
-

@@ -1,30 +1,25 @@
 package com.carlgira.weblogic.loggging;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import weblogic.logging.WLLevel;
-
-import java.util.Properties;
 import java.util.logging.ErrorManager;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-
+import weblogic.logging.LoggingHelper;
+import weblogic.logging.WLLogRecord;
 import com.carlgira.weblogic.loggging.log4j.Log4jManager;
 import com.carlgira.weblogic.loggging.log4j.LoggingLevelUtil;
 
-import weblogic.logging.LoggingHelper;
-import weblogic.logging.WLLogRecord;
 /**
- * A LogHandler class that manages a list of Log4jManager. It runs the list of managers to filter the logRecords
+ * A LogHandler class that manages a list of Log4jManager. It runs the list of
+ * managers to filter the logRecords
+ * 
  * @author carlgira
  *
  */
 public class LogHandler extends Handler
 {
 	private List<Log4jManager> logManagers;
-	
+
 	/**
 	 * 
 	 * @param logManagers List of active Log4jManagers
@@ -38,7 +33,8 @@ public class LogHandler extends Handler
 			{
 				try
 				{
-					LoggingHelper.getServerLogger().removeHandler(LogHandler.this);
+					LoggingHelper.getServerLogger().removeHandler(
+							LogHandler.this);
 				}
 				catch (Exception error)
 				{
@@ -46,7 +42,6 @@ public class LogHandler extends Handler
 			}
 		});
 	}
-	
 
 	@Override
 	/**
@@ -56,14 +51,16 @@ public class LogHandler extends Handler
 	public void publish(LogRecord logRecord)
 	{
 		WLLogRecord wlsRecord = (WLLogRecord) logRecord;
-			
+
 		LoggingLevelUtil loggingLevelUtil = new LoggingLevelUtil();
-		
-		for(Log4jManager log4jManager : logManagers)
+
+		for (Log4jManager log4jManager : logManagers)
 		{
-			if(log4jManager.isALogRecord(wlsRecord))
+			if (log4jManager.isALogRecord(wlsRecord))
 			{
-				log4jManager.log(loggingLevelUtil.getLevel(wlsRecord.getLevel()), wlsRecord);
+				log4jManager.log(
+						loggingLevelUtil.getLevel(wlsRecord.getLevel()),
+						wlsRecord);
 			}
 		}
 	}
@@ -77,6 +74,6 @@ public class LogHandler extends Handler
 	public void close() throws SecurityException
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }
