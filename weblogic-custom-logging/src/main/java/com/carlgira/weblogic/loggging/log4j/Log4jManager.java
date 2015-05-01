@@ -11,25 +11,29 @@ import weblogic.logging.LogFileFormatter;
 import weblogic.logging.WLLogRecord;
 import weblogic.servlet.logging.LogFormat;
 
+/**
+ * This class controls if a logRecord must be filtered. 
+ * @author carlgira
+ *
+ */
 public abstract class Log4jManager
 {
 	protected Logger logger;
 	
 	protected String loggerName;
 	
-	protected Pattern loggerPatternPattern;
-    
-    protected Log4jManager()
-    { 
-        logger = Logger.getRootLogger();
-	}
-    
+	protected Pattern loggerPattern;
+           
     protected Log4jManager(String loggerName, String loggerPatternRegex) 
     { 
         logger = Logger.getLogger(loggerName);
-        this.loggerPatternPattern = Pattern.compile(loggerPatternRegex);
+        this.loggerPattern = Pattern.compile(loggerPatternRegex);
 	}
-    
+    /**
+     * Method to log a message
+     * @param priority
+     * @param wlsRecord
+     */
     public void log(Priority priority, WLLogRecord wlsRecord)
     {
     	logger.log(priority, new LogFileFormatter().format(wlsRecord) );
@@ -37,17 +41,26 @@ public abstract class Log4jManager
     
 	public void setLoggerPatternRegex(String loggerPatternRegex)
 	{
-		this.loggerPatternPattern = Pattern.compile(loggerPatternRegex);
+		this.loggerPattern = Pattern.compile(loggerPatternRegex);
 	}
-	
+	/**
+	 * Method to get loggerName. This method can be replaced so the loggerName can be obtained from the logRecord 
+	 * @param logRecord
+	 * @return
+	 */
 	public String getLoggerName(WLLogRecord logRecord)
 	{
 		return this.loggerName;
 	}
 	
+	/**
+	 * Checks the logRecord against the loggerPattern Regex
+	 * @param logRecord
+	 * @return
+	 */
 	public boolean isALogRecord(WLLogRecord logRecord)
 	{
-		Matcher matcherFilter = loggerPatternPattern.matcher(logRecord.getMessage());
+		Matcher matcherFilter = loggerPattern.matcher(logRecord.getMessage());
 		return matcherFilter.find();
 	}
 }

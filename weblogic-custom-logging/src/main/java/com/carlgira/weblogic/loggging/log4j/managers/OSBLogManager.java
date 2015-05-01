@@ -8,9 +8,9 @@ import com.carlgira.weblogic.loggging.log4j.Log4jManager;
 
 public class OSBLogManager extends Log4jManager
 {
-	private static String osbloggerName = "OSBServerLogger";
+	protected static String osbloggerName = "OSBServerLogger";
 	
-	private static String osbLogPattern = "\\[OSB\\sTracing\\]";
+	protected static String osbLogPattern = "(\\[OSB\\sTracing\\]|\\[Rastreo\\sde\\sOSB\\])";
 	
 	public OSBLogManager()
 	{

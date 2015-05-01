@@ -8,34 +8,50 @@
 	   <param name="append" value="true" />
 	   <param name="maxFileSize" value="10MB" />
 	   <param name="maxBackupIndex" value="5" />
-	   <param name="file" value="${test.log.dir}/mylogOSB.log" />
-	   <layout class="org.apache.log4j.PatternLayout">
-		<param name="ConversionPattern" 
-			value="%m%n" />
-	   </layout>
-	</appender>
-	
-	<appender name="file-introScope" class="org.apache.log4j.RollingFileAppender">
-	   <param name="append" value="true" />
-	   <param name="maxFileSize" value="10MB" />
-	   <param name="maxBackupIndex" value="5" />
-	   <param name="file" value="${test.log.dir}/mylogIntroscope.log" />
+	   <param name="file" value="${test.log.dir}/proxys_log.log" />
 	   <layout class="org.apache.log4j.PatternLayout">
 		<param name="ConversionPattern" 
 			value="%m%n" />
 	   </layout>
 	</appender>
 
+	<appender name="file-proxy-hello-world" class="org.apache.log4j.RollingFileAppender">
+	   <param name="append" value="true" />
+	   <param name="maxFileSize" value="10MB" />
+	   <param name="maxBackupIndex" value="5" />
+	   <param name="file" value="${test.log.dir}/proxy_helloWorld.log" />
+	   <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" 
+			value="%m%n" />
+	   </layout>
+	</appender>
+	
+	<appender name="file-proxy-hi-world" class="org.apache.log4j.RollingFileAppender">
+	   <param name="append" value="true" />
+	   <param name="maxFileSize" value="10MB" />
+	   <param name="maxBackupIndex" value="5" />
+	   <param name="file" value="${test.log.dir}/proxy_hiworld.log" />
+	   <layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" 
+			value="%m%n" />
+	   </layout>
+	</appender>
+	
 	<!--  Loggers -->
 	
 	<logger name="OSBServerLogger">
         <level value="debug" />
         <appender-ref ref="file-osb" />
     </logger>
-    
-    <logger name="IntroScopeLogger">
+  
+    <logger name="osb-soapui-test-proxy-HiWordl">
         <level value="debug" />
-        <appender-ref ref="file-introScope" />
+        <appender-ref ref="file-proxy-hi-world" />
     </logger>
+    
+     <logger name="osb-soapui-test-proxy-PS_HelloWordl1">
+        <level value="debug" />
+        <appender-ref ref="file-proxy-hello-world" />
+    </logger>    
  
 </log4j:configuration>
