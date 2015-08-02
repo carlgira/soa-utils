@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<RuleDictionary id="G}-5ab9e1fe:14ed0a79e0d:-7c34" xmlns="http://xmlns.oracle.com/rules/dictionary">
+    <Name>CommonRules</Name>
+    <Alias>CommonRules</Alias>
+    <Package>com.rules</Package>
+    <Version>11.1.1.0.0</Version>
+    <DataModel id="L}1">
+        <CreationUpdateNumber>2</CreationUpdateNumber>
+        <Function id="G}-5ab9e1fe:14ed0a79e0d:-7c31">
+            <Name>trace</Name>
+            <Alias>trace</Alias>
+            <Visible>true</Visible>
+            <CreationUpdateNumber>5</CreationUpdateNumber>
+            <IDofType>J}java.math.BigInteger</IDofType>
+            <ListContentID>B}nil</ListContentID>
+            <Type>BigInteger</Type>
+            <IDofBucketSet>B}nil</IDofBucketSet>
+            <Form>Structured</Form>
+            <FormalParameter id="G}-5ab9e1fe:14ed0a79e0d:-7c30">
+                <Name>arg_1</Name>
+                <Alias>arg_1</Alias>
+                <Visible>true</Visible>
+                <CreationUpdateNumber>8</CreationUpdateNumber>
+                <IDofType>J}java.math.BigInteger</IDofType>
+                <ListContentID>B}nil</ListContentID>
+                <Type>BigInteger</Type>
+                <IDofBucketSet>B}nil</IDofBucketSet>
+            </FormalParameter>
+            <Action id="L}13">
+                <Form>Return</Form>
+                <Expression id="L}14">
+                    <Value>arg_1</Value>
+                    <ResolvedValue>`G}-5ab9e1fe:14ed0a79e0d:-7c30`</ResolvedValue>
+                    <IsConstant>false</IsConstant>
+                    <ParameterID>B}nil</ParameterID>
+                    <Customizable>false</Customizable>
+                </Expression>
+            </Action>
+            <ValidationUpdateNumber>12</ValidationUpdateNumber>
+        </Function>
+        <SupportsXPathEnabled>false</SupportsXPathEnabled>
+        <UpdateNumber>12</UpdateNumber>
+        <ValidationUpdateNumber>12</ValidationUpdateNumber>
+        <UpdateTime>-9223372036854775808</UpdateTime>
+    </DataModel>
+    <RuleSet id="G}-5ab9e1fe:14ed0a79e0d:-7c33">
+        <Name>Ruleset1</Name>
+        <Alias>Ruleset1</Alias>
+        <ValidationUpdateNumber>4</ValidationUpdateNumber>
+        <Customizable>true</Customizable>
+        <Active>true</Active>
+        <CalendarForm>DateTime</CalendarForm>
+        <VisibilityFilterEnabled>false</VisibilityFilterEnabled>
+        <CreationUpdateNumber>4</CreationUpdateNumber>
+    </RuleSet>
+    <ValidationUpdateNumber>12</ValidationUpdateNumber>
+    <UpdateNumber>12</UpdateNumber>
+    <ResourceBundle>CommonRulesTranslations</ResourceBundle>
+</RuleDictionary>

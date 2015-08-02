@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.carlgira</groupId>
+	<artifactId>test-bs-rules</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<oracle.mdw>/home/carlgira/Oracle/Middleware</oracle.mdw>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>rulesdk2</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${oracle.mdw}/Oracle_SOA1/soa/modules/oracle.rules_11.1.1/rulesdk2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>xmlparserv2</artifactId>
+			<version>2.0.0</version>
+			<scope>system</scope>
+			<systemPath>${oracle.mdw}/oracle_common/oui/jlib/xmlparserv2.jar</systemPath>			
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>adfm</artifactId>
+			<version>11.1.1</version>
+			<scope>system</scope>
+			<systemPath>${oracle.mdw}/oracle_common/modules/oracle.adf.model_11.1.1/adfm.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>rl</artifactId>
+			<version>11.1.1</version>
+			<scope>system</scope>
+			<systemPath>${oracle.mdw}/Oracle_SOA1/soa/modules/oracle.rules_11.1.1/rl.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.1.1</version>
+			<scope>system</scope>
+			<systemPath>${oracle.mdw}/wlserver_10.3/server/lib/ojdbc6.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

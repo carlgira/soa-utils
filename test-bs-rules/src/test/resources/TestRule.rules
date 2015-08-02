@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<RuleDictionary id="G}-5ab9e1fe:14ed0a79e0d:-7c2f" xmlns="http://xmlns.oracle.com/rules/dictionary">
+    <Name>TestRule</Name>
+    <Alias>TestRule</Alias>
+    <Package>com.rules</Package>
+    <Version>11.1.1.0.0</Version>
+    <DataModel id="L}1">
+        <CreationUpdateNumber>2</CreationUpdateNumber>
+        <SupportsXPathEnabled>false</SupportsXPathEnabled>
+        <UpdateNumber>40</UpdateNumber>
+        <ValidationUpdateNumber>40</ValidationUpdateNumber>
+        <UpdateTime>-9223372036854775808</UpdateTime>
+    </DataModel>
+    <RuleSet id="G}-5ab9e1fe:14ed0a79e0d:-7c2e">
+        <Name>Ruleset1</Name>
+        <Alias>Ruleset1</Alias>
+        <ValidationUpdateNumber>4</ValidationUpdateNumber>
+        <Customizable>true</Customizable>
+        <Active>true</Active>
+        <CalendarForm>DateTime</CalendarForm>
+        <VisibilityFilterEnabled>false</VisibilityFilterEnabled>
+        <CreationUpdateNumber>4</CreationUpdateNumber>
+    </RuleSet>
+    <DictionaryLink id="L}3">
+        <Name>CommonRules</Name>
+        <Alias>CommonRules</Alias>
+        <Package>com.rules</Package>
+        <UpdateNumber>12</UpdateNumber>
+        <PrefixLinkedNames>true</PrefixLinkedNames>
+    </DictionaryLink>
+    <ValidationUpdateNumber>40</ValidationUpdateNumber>
+    <UpdateNumber>40</UpdateNumber>
+    <ResourceBundle>TestRuleTranslations</ResourceBundle>
+</RuleDictionary>
