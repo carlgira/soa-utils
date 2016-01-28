@@ -2,6 +2,10 @@
 
 Two utilities to detect a deadlock inside a JVM. <br/>
 
+The application and the service only return a boolean.
+- "true" means a deadlock is occurring
+- "false" means a deadlock is not occurring
+
 #### deadlock-detection 
 
 A remote deadlock detector. In connects to a JVM using JMX to detect if a deadlock is ocurring. It needs the host of the JVM and the JMX port. 
