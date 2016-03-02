@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/bpel/workflow/routingSlip" xmlns:t="http://xmlns.oracle.com/bpel/workflow/taskDefinition" xmlns:r="http://xmlns.oracle.com/bpel/workflow/routingSlip" xmlns:c="http://xmlns.oracle.com/bpel/workflow/configuration">
+    <xs:import namespace="http://xmlns.oracle.com/bpel/workflow/configuration" schemaLocation="c.xsd"/>
+    <xs:import namespace="http://xmlns.oracle.com/bpel/workflow/taskDefinition" schemaLocation="t.xsd"/>
+    <xs:element name="routingSlip">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r:globalConfiguration"/>
+                <xs:element ref="r:participants"/>
+                <xs:element ref="r:onErrorParticipant"/>
+                <xs:element ref="r:notification"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="globalConfiguration">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r:applicationContext"/>
+                <xs:element ref="r:taskOwner"/>
+                <xs:element ref="r:expirationDuration"/>
+                <xs:element ref="r:sharePayloadConfiguration"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="applicationContext">
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="taskOwner">
+        <xs:complexType mixed="true">
+            <xs:attribute name="identityType" use="required" type="xs:NCName"/>
+            <xs:attribute name="type" use="required" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="expirationDuration">
+        <xs:complexType>
+            <xs:attribute name="duration" use="required" type="xs:NCName"/>
+            <xs:attribute name="type" use="required" type="xs:NCName"/>
+            <xs:attribute name="useBusinessCalendar" use="required" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="sharePayloadConfiguration">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r:type"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="type" type="xs:string"/>
+    <xs:element name="participants">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r:stage"/>
+            </xs:sequence>
+            <xs:attribute name="isAdhocRoutingSupported" use="required" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="stage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r:participant"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="participant">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="r:resource">
+                    <xs:attribute name="name" use="required" type="xs:NCName"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="onErrorParticipant" type="r:resource"/>
+    <xs:element name="notification">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="r:reminder"/>
+                <xs:element ref="r:groupNotificationConfiguration"/>
+            </xs:sequence>
+            <xs:attribute name="actionable" use="required" type="xs:boolean"/>
+            <xs:attribute name="hideWorklistUrlInEmail" use="required" type="xs:boolean"/>
+            <xs:attribute name="includeTaskAttachments" use="required" type="xs:boolean"/>
+            <xs:attribute name="oneNotificationPerUserPerAction" use="required" type="xs:boolean"/>
+            <xs:attribute name="secureNotifications" use="required" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="reminder">
+        <xs:complexType>
+            <xs:attribute name="recurrence" use="required" type="xs:integer"/>
+            <xs:attribute name="relativeDate" use="required" type="xs:NCName"/>
+            <xs:attribute name="reminderDuration" use="required" type="xs:NCName"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="groupNotificationConfiguration" type="xs:NCName"/>
+    <xs:complexType name="resource">
+        <xs:attribute name="identityType" use="required" type="xs:NCName"/>
+        <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+
+</xs:schema>

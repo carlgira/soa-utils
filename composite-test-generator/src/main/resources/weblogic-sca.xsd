@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://xmlns.oracle.com/weblogic/weblogic-sca" 
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        version="1.0">
+
+  <element name="reference">
+    <complexType>
+      <sequence>
+        <any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+      </sequence>
+      <attribute name="name" use="required">
+        <simpleType>
+          <restriction base="string" />
+        </simpleType>
+      </attribute>
+      <attribute name="type" use="required">
+        <simpleType>
+          <restriction base="string" />
+        </simpleType>
+      </attribute>
+      <attribute name="default" use="optional">
+        <simpleType>
+          <restriction base="string" />
+        </simpleType>
+      </attribute>
+    </complexType>
+  </element>
+  <element name="service">
+    <complexType>
+      <sequence>
+        <any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax" />
+      </sequence>
+      <attribute name="name" use="required">
+        <simpleType>
+          <restriction base="string" />
+        </simpleType>
+      </attribute>
+      <attribute name="type" use="required">
+        <simpleType>
+          <restriction base="string" />
+        </simpleType>
+      </attribute>
+      <attribute name="target" use="required">
+        <simpleType>
+          <restriction base="string" />
+        </simpleType>
+      </attribute>
+    </complexType>
+  </element>
+</schema>

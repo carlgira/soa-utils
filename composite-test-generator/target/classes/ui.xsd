@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/soa/designer/" xmlns:ui="http://xmlns.oracle.com/soa/designer/" xmlns:ns="http://xmlns.oracle.com/sca/1.0">
+    <xs:import namespace="http://xmlns.oracle.com/sca/1.0" schemaLocation="composite.xsd"/>
+    <xs:attributeGroup name="wsdlLocation">
+        <xs:attribute name="wsdlLocation" use="required" form="qualified"/>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="wsdlLocation1">
+        <xs:attribute name="wsdlLocation" use="required" form="qualified" type="xs:NCName"/>
+    </xs:attributeGroup>
+</xs:schema>
