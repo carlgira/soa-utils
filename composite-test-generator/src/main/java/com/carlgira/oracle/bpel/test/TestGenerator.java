@@ -51,11 +51,11 @@ public class TestGenerator {
     }
 
     public TestSuite generateSampleTestSuite(){
-        TestSuite testSuite = new TestSuite();
-
         if(composite == null){
             return null;
         }
+
+        TestSuite testSuite = new TestSuite(composite.getName());
 
         for(Service service : composite.getService()){
             TestCase testCase = new TestCase( service.getName() + "_case00");
@@ -86,21 +86,15 @@ public class TestGenerator {
                         testCase.humanTaskList.add(humanTask);
                     }
                 }
-
-                for(Reference reference : composite.getReference()){
-                    if (!existsWire(parentComponent.getName(), reference.getName())) {
-                        continue;
-                    }
-                    ServiceCall serviceCall = new ServiceCall(reference.getName(), reference.getWsdlLocation());
-                    testCase.servicesList.add(serviceCall);
-                }
             }
             testSuite.testCaseList.add(testCase);
 
         }
 
-
-
+        for(Reference reference : composite.getReference()){
+            ServiceCall serviceCall = new ServiceCall(reference.getName(), reference.getWsdlLocation());
+            testSuite.mockServices.add(serviceCall);
+        }
 
         return testSuite;
     }
