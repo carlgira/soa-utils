@@ -110,6 +110,8 @@ public class TestGenerator {
     }
 
 
+
+
     public void marshall(Object object, OutputStream outputStream){
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(object.getClass());

@@ -10,6 +10,7 @@ public class TestCase {
     public String name;
     public String description = "TestCase description";
     public List<HumanTask> humanTaskList = new ArrayList<HumanTask>();
+    public Long timeout = 180000L;
 
     public TestCase(){
     }

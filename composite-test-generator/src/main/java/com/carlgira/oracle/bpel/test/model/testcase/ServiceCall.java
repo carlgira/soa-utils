@@ -8,6 +8,9 @@ public class ServiceCall {
     public String wsdl;
     public Boolean mock = false;
 
+    public ServiceCall(){
+    }
+
     public ServiceCall(String name, String wsdl){
         this.name = name;
         this.wsdl = wsdl;
