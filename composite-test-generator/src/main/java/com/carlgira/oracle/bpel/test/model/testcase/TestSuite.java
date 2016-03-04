@@ -13,6 +13,9 @@ import java.util.List;
 public class TestSuite {
 
     public String name;
+    public String partition;
+    public String version;
+    public Server server;
     public List<TestCase> testCaseList = new ArrayList<TestCase>();
     public List<ServiceCall> mockServices = new ArrayList<ServiceCall>();
 
@@ -21,6 +24,9 @@ public class TestSuite {
 
     public TestSuite(String name){
         this.name = name;
+        this.server = new Server("weblogic", "welcome1", "t3://192.168.100.228:8001/soa-infra/", "jazn.com");
+        this.partition = "default";
+        this.version = "1.0";
     }
 
     public static TestSuite getTestSuite(String fileName) throws IOException {

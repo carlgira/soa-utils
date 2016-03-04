@@ -9,7 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <mdw.home>/home/carlgira/Oracle/Middleware</mdw.home>
+        <!-- <mdw.home>/home/carlgira/Oracle/Middleware</mdw.home>-->
+        <mdw.home>I:\Middleware</mdw.home>
     </properties>
 
     <dependencies>

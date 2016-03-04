@@ -56,7 +56,13 @@ public class HumanTaskManager {
         if (task != null) {
             if (this.wfsvcClient != null) {
                 ITaskService taskSvc = this.wfsvcClient.getTaskService();
-                task = querySvc.getTaskDetailsById(ctx, task.getSystemAttributes().getTaskId());
+
+                try{
+                    task = taskSvc.acquireTask(ctx, task.getSystemAttributes().getTaskId());
+                }
+                catch (Exception e) {
+                    task = querySvc.getTaskDetailsById(ctx, task.getSystemAttributes().getTaskId());
+                }
 
                 if (outcome.equals("REQUEST_INFORMATION")) {
                     String firstAssignee = "";
@@ -70,6 +76,7 @@ public class HumanTaskManager {
                     }
                     ITaskAssignee ta = new TaskAssignee(firstAssignee, false);
                     taskSvc.requestInfoForTask(this.ctx, task, ta);
+
                 } else if (outcome.equals("ESCALATE")) {
                     taskSvc.escalateTask(this.ctx, task);
                 } else if (outcome.equals("WITHDRAW")) {
