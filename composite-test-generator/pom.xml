@@ -159,6 +159,18 @@
             <scope>system</scope>
             <systemPath>${mdw.home}/Oracle_SOA1/soa/modules/oracle.soa.workflow_11.1.1/bpm-services.jar</systemPath>
         </dependency>
+
+        <!-- Actividades!!! -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>fabriccommon</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/oracle.fabriccommon_11.1.1/fabric-common.jar</systemPath>
+        </dependency>
+
+
+
     </dependencies>
 
 

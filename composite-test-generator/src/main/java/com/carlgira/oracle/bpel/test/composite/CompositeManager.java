@@ -6,7 +6,11 @@ import com.carlgira.oracle.bpel.test.model.testcase.Server;
 import com.carlgira.oracle.bpel.test.model.testcase.TestCase;
 import com.carlgira.oracle.bpel.test.model.testcase.TestSuite;
 import oracle.soa.management.facade.*;
+import oracle.soa.management.facade.bpel.BPELInstance;
+import oracle.soa.management.internal.facade.bpel.BPELInstanceImpl;
+import oracle.soa.management.util.ActivityInstanceFilter;
 import oracle.soa.management.util.ComponentInstanceFilter;
+import oracle.soa.management.util.CompositeInstanceFilter;
 
 import javax.naming.Context;
 import java.util.Date;
@@ -23,6 +27,7 @@ public class CompositeManager {
     private TestSuite testSuite;
     private Locator locator;
     private Component lookupComponent;
+    private Composite lookupComposite;
     private CompositeComponent compositeComponent;
 
 
@@ -38,7 +43,16 @@ public class CompositeManager {
 
         CompositeManager compositeManager = new CompositeManager(testSuite, testSuite.compositeComponents.get(0));
         compositeManager.init();
-        String compId = compositeManager.searchCompositeByPayloadRegex("case_001");
+        //ComponentInstance compId = compositeManager.getCompositeByPayloadRegex("case_001");
+
+        ComponentInstance compId = compositeManager.getComponentById("20001");
+        BPELInstance bpelInstance = (BPELInstance)compId;
+
+        System.out.println(bpelInstance.getAuditTrail());
+
+        for(ActivityInstance activityInstance : bpelInstance.getActivities()){
+            System.out.println(activityInstance.getId());
+        }
     }
 
     public void init() throws Exception {
@@ -50,14 +64,18 @@ public class CompositeManager {
         jndiProps.put("dedicated.connection","true");
 
         this.locator = LocatorFactory.createLocator(jndiProps);
-        String componentName = testSuite.partition+"/"+testSuite.name+"!"+testSuite.version+"/"+this.compositeComponent.name+"";
+
+        String compositeName = testSuite.partition+"/"+testSuite.name+"!"+testSuite.version;
+        String componentName = compositeName + "/"+this.compositeComponent.name;
+
         this.lookupComponent = locator.lookupComponent(componentName);
+        this.lookupComposite = locator.lookupComposite(compositeName);
     }
 
 
-   public  String searchCompositeByPayloadRegex(String value) throws Exception {
+   public  ComponentInstance getCompositeByPayloadRegex(String value) throws Exception {
        ComponentInstanceFilter compInstFilter = new ComponentInstanceFilter();
-       compInstFilter.setMinCreationDate(new Date(System.currentTimeMillis() - 200000));
+       compInstFilter.setMinCreationDate(new Date(System.currentTimeMillis() - 200000)); // Last 20 seconds
 
        List<ComponentInstance> compInstances = lookupComponent.getInstances(compInstFilter);
 
@@ -68,10 +86,47 @@ public class CompositeManager {
                Matcher m = r.matcher(auditTrail);
 
                if(m.find()){
-                   return compInst.getCompositeInstanceId();
+                   return compInst;
                }
            }
        }
        return null;
    }
+
+    public ComponentInstance getComponentById(String value) throws Exception {
+        ComponentInstanceFilter compInstFilter = new ComponentInstanceFilter();
+        compInstFilter.setCompositeInstanceId(value);
+
+        List<ComponentInstance> compInstances = lookupComponent.getInstances(compInstFilter);
+
+        if (compInstances != null && !compInstances.isEmpty()) {
+            return compInstances.get(0);
+        }
+        return null;
+    }
+
+    public CompositeInstance getCompositeById(String id) throws Exception {
+        CompositeInstanceFilter compInstFilter = new CompositeInstanceFilter();
+        compInstFilter.setId(id);
+
+        List<CompositeInstance> compInstances = this.lookupComposite.getInstances(compInstFilter);
+
+        if (compInstances != null && !compInstances.isEmpty()) {
+            return compInstances.get(0);
+        }
+
+        BPELInstanceImpl bpelInstance = new BPELInstanceImpl();
+
+        return null;
+    }
+
+
+
+    /*
+    public List<ActivityInstance> getActivities(ActivityInstanceFilter filter)
+            throws Exception
+    {
+        return this.locator.executeServiceEngineMethod(getServiceEngine(), "getActivities", new Object[] { filter });
+    }
+    */
 }
