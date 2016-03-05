@@ -1,6 +1,9 @@
 package com.carlgira.oracle.bpel.test.composite;
 
 
+import com.carlgira.oracle.bpel.test.model.testcase.CompositeComponent;
+import com.carlgira.oracle.bpel.test.model.testcase.Server;
+import com.carlgira.oracle.bpel.test.model.testcase.TestCase;
 import com.carlgira.oracle.bpel.test.model.testcase.TestSuite;
 import oracle.soa.management.facade.*;
 import oracle.soa.management.util.ComponentInstanceFilter;
@@ -13,32 +16,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by emateo on 03/03/2016.
+ * Created by carlgira on 03/03/2016.
  */
 public class CompositeManager {
 
-    private String regexPattern;
-    private String value;
     private TestSuite testSuite;
-    private String compositeId;
     private Locator locator;
     private Component lookupComponent;
+    private CompositeComponent compositeComponent;
 
 
-    public CompositeManager(String regexPattern, String value, TestSuite testSuite) {
-        this.regexPattern = regexPattern;
-        this.value = value;
+    public CompositeManager(TestSuite testSuite, CompositeComponent compositeComponent) {
         this.testSuite = testSuite;
+        this.compositeComponent = compositeComponent;
     }
 
     public static void main(String args[]) throws Exception {
 
-        String testSuiteJson = "D:\\cgiraldo\\test\\ContratoREMIT.json";
+        String testSuiteJson = "/home/carlgira/files/HumanTaskComposite.json";
         TestSuite testSuite = TestSuite.getTestSuite(testSuiteJson);
 
-        CompositeManager compositeManager = new CompositeManager("Tarjeta>@value<\\/(.*):Tarjeta>", "51153JM_OMEL", testSuite);
+        CompositeManager compositeManager = new CompositeManager(testSuite, testSuite.compositeComponents.get(0));
         compositeManager.init();
-        String compId = compositeManager.searchComposite();
+        String compId = compositeManager.searchCompositeByPayloadRegex("case_001");
     }
 
     public void init() throws Exception {
@@ -50,25 +50,25 @@ public class CompositeManager {
         jndiProps.put("dedicated.connection","true");
 
         this.locator = LocatorFactory.createLocator(jndiProps);
-        String componentName = testSuite.partition+"/"+testSuite.name+"!"+testSuite.version+"/"+testSuite.name+"";
+        String componentName = testSuite.partition+"/"+testSuite.name+"!"+testSuite.version+"/"+this.compositeComponent.name+"";
         this.lookupComponent = locator.lookupComponent(componentName);
     }
 
 
-   public  String searchComposite() throws Exception {
+   public  String searchCompositeByPayloadRegex(String value) throws Exception {
        ComponentInstanceFilter compInstFilter = new ComponentInstanceFilter();
        compInstFilter.setMinCreationDate(new Date(System.currentTimeMillis() - 200000));
 
        List<ComponentInstance> compInstances = lookupComponent.getInstances(compInstFilter);
 
        if (compInstances != null) {
-           Pattern r = Pattern.compile(regexPattern);
+           Pattern r = Pattern.compile(this.compositeComponent.payloadRegexLookupComposite.replace("@value", value));
            for (ComponentInstance compInst : compInstances) {
                String auditTrail = compInst.getAuditTrail().toString();
                Matcher m = r.matcher(auditTrail);
 
                if(m.find()){
-                   return compositeId = compInst.getCompositeInstanceId();
+                   return compInst.getCompositeInstanceId();
                }
            }
        }

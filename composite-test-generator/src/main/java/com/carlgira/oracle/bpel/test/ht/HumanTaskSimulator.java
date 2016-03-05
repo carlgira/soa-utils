@@ -96,8 +96,8 @@ public class HumanTaskSimulator implements Runnable {
 
     public static void main(String args[]) throws IOException, WorkflowException {
 
-        TestSuite testSuite1 = TestGenerator.genTestSuite("D:\\Usuarios\\JDeveloper\\mywork\\BPEL_Desarrollo_11g\\Agentes\\DatosAgentes");
-        new ObjectMapper().writeValue(new FileOutputStream("D:\\cgiraldo\\test\\DatosAgentes.json"), testSuite1);
+        TestSuite testSuite1 = TestGenerator.genTestSuite("/home/carlgira/files/soa-testing-snippets~soatestingutilities/HumanTaskComposite");
+        new ObjectMapper().writeValue(new FileOutputStream("/home/carlgira/files/HumanTaskComposite.json"), testSuite1);
 
 
 /*
