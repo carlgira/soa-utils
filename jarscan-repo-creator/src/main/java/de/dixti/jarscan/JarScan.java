@@ -152,7 +152,7 @@ public class JarScan {
                     FileStream fileStream = (FileStream)entry;
                     if(options.isExportXSDs()){
                         if(fileStream.getName().contains(".xsd") || fileStream.getName().contains(".exsd")){
-                            Files.copy(fileStream.getInputStream(), Paths.get("schemas/" + fileStream.getName() +  counter));
+                            Files.copy(fileStream.getInputStream(), Paths.get("schemas/" + counter++ + "_" + fileStream.getName()));
                         }
                     }
                     scanFile((FileStream)entry, jarResult);
