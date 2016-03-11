@@ -1,11 +1,11 @@
-package com.carlgira.oracle.bpel.test.ht;
+package com.carlgira.oracle.bpel.flowchart.managers;
 
+import com.carlgira.util.ServerConnection;
 import oracle.bpel.services.workflow.StaleObjectException;
 import oracle.bpel.services.workflow.WorkflowException;
 import oracle.bpel.services.workflow.client.IWorkflowServiceClient;
 import oracle.bpel.services.workflow.client.IWorkflowServiceClientConstants;
 import oracle.bpel.services.workflow.client.WorkflowServiceClientFactory;
-import oracle.bpel.services.workflow.metadata.routingslip.model.*;
 import oracle.bpel.services.workflow.query.ITaskQueryService;
 import oracle.bpel.services.workflow.repos.Ordering;
 import oracle.bpel.services.workflow.repos.Predicate;
@@ -17,15 +17,12 @@ import oracle.bpel.services.workflow.task.model.IdentityTypeImpl;
 import oracle.bpel.services.workflow.task.model.Task;
 import oracle.bpel.services.workflow.verification.IWorkflowContext;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
 /**
  * Created by carlgira on 3/3/16.
+ * Class to Control the human task inside of a composite
  */
 public class HumanTaskManager {
 
@@ -33,30 +30,35 @@ public class HumanTaskManager {
     protected IWorkflowContext ctx;
     protected ITaskQueryService querySvc;
 
-    private String serverURL;
-    private String adminUser;
-    private String adminPassword;
-    private String realm;
+    private ServerConnection serverConnection;
 
-    public HumanTaskManager(String serverURL, String adminUser, String adminPassword, String realm) {
-        this.serverURL = serverURL;
-        this.adminPassword = adminPassword;
-        this.adminUser = adminUser;
-        this.realm = realm;
+    public HumanTaskManager(ServerConnection serverConnection) {
+        this.serverConnection = serverConnection;
     }
 
-    public void connectToServer() throws WorkflowException {
+    /**
+     * Connect to the server
+     * @throws WorkflowException
+     */
+    public void init() throws WorkflowException {
         Map<IWorkflowServiceClientConstants.CONNECTION_PROPERTY, String> properties = new HashMap<IWorkflowServiceClientConstants.CONNECTION_PROPERTY, String>();
         properties.put(IWorkflowServiceClientConstants.CONNECTION_PROPERTY.MODE, IWorkflowServiceClientConstants.MODE_DYNAMIC);
 
-        properties.put(IWorkflowServiceClientConstants.CONNECTION_PROPERTY.EJB_PROVIDER_URL, this.serverURL);
-        properties.put(IWorkflowServiceClientConstants.CONNECTION_PROPERTY.EJB_SECURITY_PRINCIPAL, this.adminUser);
-        properties.put(IWorkflowServiceClientConstants.CONNECTION_PROPERTY.EJB_SECURITY_CREDENTIALS, this.adminPassword);
+        properties.put(IWorkflowServiceClientConstants.CONNECTION_PROPERTY.EJB_PROVIDER_URL, this.serverConnection.server);
+        properties.put(IWorkflowServiceClientConstants.CONNECTION_PROPERTY.EJB_SECURITY_PRINCIPAL, this.serverConnection.adminUser);
+        properties.put(IWorkflowServiceClientConstants.CONNECTION_PROPERTY.EJB_SECURITY_CREDENTIALS, this.serverConnection.adminPassword);
         wfsvcClient = WorkflowServiceClientFactory.getWorkflowServiceClient(WorkflowServiceClientFactory.REMOTE_CLIENT, properties, null);
         querySvc = wfsvcClient.getTaskQueryService();
-        ctx = querySvc.authenticate(this.adminUser, this.adminPassword.toCharArray(), this.realm);
+        ctx = querySvc.authenticate(this.serverConnection.adminUser, this.serverConnection.adminPassword.toCharArray(), this.serverConnection.realm);
     }
 
+    /**
+     * Set the task outcome
+     * @param task
+     * @param outcome
+     * @throws WorkflowException
+     * @throws StaleObjectException
+     */
     public void setTaskOutcome(Task task, String outcome) throws WorkflowException, StaleObjectException {
 
         if (task != null) {
@@ -98,19 +100,28 @@ public class HumanTaskManager {
         }
     }
 
+    /**
+     * Calls to getTasklist(List<HtQuery> htQuery)
+     * @param htQuery
+     * @return
+     */
     public List<Task> getTasklist(HtQuery htQuery) {
         List<HtQuery> htQueries = new ArrayList<HtQuery>();
         htQueries.add(htQuery);
         return getTasklist(htQueries);
     }
 
+    /**
+     * Retrieves a list of human task using a list of SQL like query
+     * @param htQuery
+     * @return
+     */
     public List<Task> getTasklist(List<HtQuery> htQuery) {
         List<Task> returnList = null;
         try {
             ITaskQueryService querySvc = wfsvcClient.getTaskQueryService();
 
-            if (realm != null && realm.trim().length() > 0)
-                ctx = querySvc.authenticate(this.adminUser, this.adminPassword.toCharArray(), this.realm);
+            //ctx = querySvc.authenticate(this.serverConnection.adminUser, this.serverConnection.adminPassword.toCharArray(), this.serverConnection.realm);
 
             List queryColumns = new ArrayList<>();
             queryColumns.add(TableConstants.WFTASK_TASKID_COLUMN.getName());
@@ -143,6 +154,12 @@ public class HumanTaskManager {
         return returnList;
     }
 
+    /**
+     * Build the predicate using the list of HTQuery. Like a SQL where just with the "and" operator
+     * @param htQuerys
+     * @return
+     * @throws Exception
+     */
     protected Predicate buildPredicate(List<HtQuery> htQuerys) throws Exception {
         Predicate predicate = null;
         if(htQuerys != null && !htQuerys.isEmpty()){
@@ -159,36 +176,5 @@ public class HumanTaskManager {
         return predicate;
     }
 
-    public static void main(String args[])  throws WorkflowException
-    {
-
-        String server =  "t3://192.168.100.228:8001/soa-infra/"; //"t3://localhost:8001/soa-infra/";192.168.239.228:8001/deadlock-detector-service
-        String user = "bpeladmin"; //"weblogic";
-        String pass = "bpeladmin"; // "weblogic1";
-        String realm = "jazn.com"; // "jazn.com";
-        String compositeId = "1820046"; //"1820046";
-
-        HumanTaskManager humanTaskManager = new HumanTaskManager(server, user, pass, realm);
-        humanTaskManager.connectToServer();
-        HtQuery htQuery = new HtQuery(TableConstants.WFTASK_COMPOSITEINSTANCEID_COLUMN, Predicate.OP_EQ, compositeId);
-        HtQuery htQuery1 = new HtQuery(TableConstants.WFTASK_WORKFLOWPATTERN_COLUMN, Predicate.OP_EQ, "Participant");
-
-        List<HtQuery> htQueryList = new ArrayList<>();
-        htQueryList.add(htQuery);
-        htQueryList.add(htQuery1);
-
-        List<Task> tasks = humanTaskManager.getTasklist(htQueryList);
-
-        for(Task task: tasks){
-
-            System.out.println(task.getTaskDefinitionId() + " " + task.getSystemAttributes().getOutcome()
-            + " " + task.getSystemAttributes().getActivityName()
-            + " " + task.getSystemAttributes().getActionDisplayName()
-                    + " " + task.getCategory()
-                    + " " + task.getSystemAttributes().getWorkflowPattern()
-           );
-        }
-
-    }
-
 }
+

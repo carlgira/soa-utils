@@ -74,8 +74,6 @@ public class HumanTaskSimulator implements Runnable {
 
                     this.procesedTask.put(task.getIdentificationKey(), true);
 
-
-
                     for(HumanTask humanTask : this.testCase.humanTaskList){
 
                         if(task.getTaskDefinitionId().endsWith("/" + humanTask.name)){
@@ -96,16 +94,19 @@ public class HumanTaskSimulator implements Runnable {
 
     public static void main(String args[]) throws IOException, WorkflowException {
 
-        TestSuite testSuite1 = TestGenerator.genTestSuite("/home/carlgira/files/soa-testing-snippets~soatestingutilities/HumanTaskComposite");
-        new ObjectMapper().writeValue(new FileOutputStream("/home/carlgira/files/HumanTaskComposite.json"), testSuite1);
+        //TestSuite testSuite1 = TestGenerator.genTestSuite("/home/carlgira/files/soa-testing-snippets~soatestingutilities/HumanTaskComposite");
+        //new ObjectMapper().writeValue(new FileOutputStream("/home/carlgira/files/HumanTaskComposite.json"), testSuite1);
+
+        //TestSuite testSuite1 = TestGenerator.genTestSuite("D:\\Usuarios\\JDeveloper\\mywork\\BPEL_Desarrollo_11g\\Agentes\\AltaAgentes");
+        //new ObjectMapper().writeValue(new FileOutputStream("D:\\cgiraldo\\test\\AltaAgentes.json"), testSuite1);
 
 
-/*
+
         String server =  "t3://192.168.100.228:8001/soa-infra/"; //"t3://localhost:8001/soa-infra/";192.168.239.228:8001/deadlock-detector-service
         String user = "bpeladmin"; //"weblogic";
         String pass = "bpeladmin"; // "weblogic1";
         String realm = "jazn.com"; // "jazn.com";
-        String compositeId = "2000013"; //"2000005";
+        String compositeId = "2000013"; //"1820046";
         String testSuiteJson = "D:\\cgiraldo\\test\\ContratoREMIT.json";
 
         HumanTaskManager humanTaskManager = new HumanTaskManager(server, user, pass, realm);
@@ -113,8 +114,10 @@ public class HumanTaskSimulator implements Runnable {
 
         TestSuite testSuite = TestSuite.getTestSuite(testSuiteJson);
 
-        HumanTaskSimulator humanTaskSimulator = new HumanTaskSimulator(testSuite.testCaseList.get(0), humanTaskManager, compositeId ) ;
+        HumanTaskSimulator humanTaskSimulator = new HumanTaskSimulator(testSuite.compositeComponents.get(0).testCaseList.get(0), humanTaskManager, compositeId ) ;
         Thread t = new Thread(humanTaskSimulator);
-        t.start();*/
+        t.start();
+
+
     }
 }

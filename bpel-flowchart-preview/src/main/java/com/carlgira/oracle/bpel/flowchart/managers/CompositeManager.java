@@ -1,23 +1,12 @@
-package com.carlgira.oracle.bpel.test.composite;
+package com.carlgira.oracle.bpel.flowchart.managers;
 
-
-import com.carlgira.oracle.bpel.test.model.ServerConnection;
-import com.carlgira.oracle.bpel.test.model.testcase.CompositeComponent;
-import com.carlgira.oracle.bpel.test.model.testcase.Server;
-import com.carlgira.oracle.bpel.test.model.testcase.TestCase;
-import com.carlgira.oracle.bpel.test.model.testcase.TestSuite;
+import com.carlgira.util.ServerConnection;
 import oracle.soa.management.CompositeDN;
 import oracle.soa.management.facade.*;
 import oracle.soa.management.facade.bpel.BPELInstance;
-import oracle.soa.management.internal.facade.bpel.BPELInstanceImpl;
-import oracle.soa.management.util.ActivityInstanceFilter;
 import oracle.soa.management.util.ComponentInstanceFilter;
 import oracle.soa.management.util.CompositeInstanceFilter;
-
 import javax.naming.Context;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -26,6 +15,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by carlgira on 03/03/2016.
+ * Class to control the connection to the SOA server to lookup for BPEL or Composite instances.
  */
 public class CompositeManager {
 
@@ -36,31 +26,10 @@ public class CompositeManager {
         this.serverConnection = serverConnection;
     }
 
-    public static void main(String args[]) throws Exception {
-
-        //String testSuiteJson = "/home/carlgira/files/HumanTaskComposite.json";
-        String testSuiteJson = "D:\\cgiraldo\\test\\AltaAgentes.json";
-        TestSuite testSuite = TestSuite.getTestSuite(testSuiteJson);
-
-        String componentName = "AltaAgentes";
-        CompositeDN compositeDN = new CompositeDN(testSuite.partition+"/"+testSuite.name+"!"+testSuite.version);
-
-        ServerConnection serverConnection = new ServerConnection(testSuite.server.serverUrl, testSuite.server.adminUser, testSuite.server.adminPassword, testSuite.server.realm);
-
-        CompositeManager compositeManager = new CompositeManager(serverConnection);
-        compositeManager.init();
-        //ComponentInstance compId = compositeManager.getCompositeByPayloadRegex("case_001");
-
-        BPELInstance bpelInstance = compositeManager.getBPELById(compositeDN, componentName, "8320045");
-
-        //System.out.println(bpelInstance.getAuditTrail());
-        //Files.write(Paths.get("D:\\cgiraldo\\test\\AltaAgentesAudittrail.xml"), bpelInstance.getAuditTrail().toString().getBytes());
-
-        for(ActivityInstance activityInstance : bpelInstance.getActivities()){
-            System.out.println(activityInstance.getId());
-        }
-    }
-
+    /**
+     * Create server connection
+     * @throws Exception
+     */
     public void init() throws Exception {
         Hashtable jndiProps = new Hashtable();
         jndiProps.put(Context.PROVIDER_URL, this.serverConnection.server);
@@ -72,7 +41,17 @@ public class CompositeManager {
         this.locator = LocatorFactory.createLocator(jndiProps);
     }
 
-   public  ComponentInstance getComponentByPayloadRegex(CompositeDN compositeDN, String processName ,String paylodRegex, Long timeBefore) throws Exception {
+    /**
+     * Use with careful! . Looks for a component just specifying a regex expression that will be checked against the payload
+     * It has a timeBefore parameter used as filter to check against instances executed in the last N previous miliseconds
+     * @param compositeDN The compositeDN
+     * @param processName BPEl process name
+     * @param paylodRegex Payload regex to identify a request
+     * @param timeBefore Time in milliseconds to include the composites initiated in that range
+     * @return
+     * @throws Exception
+     */
+   public ComponentInstance getComponentByPayloadRegex(CompositeDN compositeDN, String processName ,String paylodRegex, Long timeBefore) throws Exception {
        Component component = locator.lookupComponent(compositeDN, processName );
        ComponentInstanceFilter compInstFilter = new ComponentInstanceFilter();
        compInstFilter.setMinCreationDate(new Date(System.currentTimeMillis() - timeBefore));
@@ -93,6 +72,14 @@ public class CompositeManager {
        return null;
    }
 
+    /**
+     * Search in the engine for a BPElInstance using the bpelId
+     * @param compositeDN The compositeDN
+     * @param processName BPEL process name
+     * @param bpelId BPEL id
+     * @return
+     * @throws Exception
+     */
     public BPELInstance getBPELById(CompositeDN compositeDN, String processName,String bpelId) throws Exception {
         Component component = locator.lookupComponent(compositeDN, processName );
         ComponentInstanceFilter compInstFilter = new ComponentInstanceFilter();
@@ -106,10 +93,17 @@ public class CompositeManager {
         return null;
     }
 
-    public CompositeInstance getCompositeById(CompositeDN compositeDN, String id) throws Exception {
+    /**
+     * Search in the engine for a CompositeInstance using the compositeId
+     * @param compositeDN The compositeDN
+     * @param compositeId Composite Id
+     * @return
+     * @throws Exception
+     */
+    public CompositeInstance getCompositeById(CompositeDN compositeDN, String compositeId) throws Exception {
         Composite composite = locator.lookupComposite(compositeDN);
         CompositeInstanceFilter compInstFilter = new CompositeInstanceFilter();
-        compInstFilter.setId(id);
+        compInstFilter.setId(compositeId);
 
         List<CompositeInstance> compInstances = composite.getInstances(compInstFilter);
 
