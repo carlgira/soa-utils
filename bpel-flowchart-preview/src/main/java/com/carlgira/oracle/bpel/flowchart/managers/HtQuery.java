@@ -10,11 +10,11 @@ import oracle.bpel.services.workflow.repos.Column;
 public class HtQuery {
 
     /**
-     * Any Column of the WFTASK table. Use the oracle.bpel.services.workflow.repos.TableConstants class to get the right value
+     * Any Column of the WFTASK table. Use the oracle.bpel.services.workflow.repos.TableConstants enum to get the right value
      */
     public Column column; // oracle.bpel.services.workflow.repos.TableConstants;
     /**
-     * Operation to execute in the query. Use the oracle.bpel.services.workflow.repos.Predicate class to get the right value
+     * Operation to execute in the query. Use the oracle.bpel.services.workflow.repos.Predicate enum to get the right value
      */
     public Integer operator; // oracle.bpel.services.workflow.repos.Predicate
     /**

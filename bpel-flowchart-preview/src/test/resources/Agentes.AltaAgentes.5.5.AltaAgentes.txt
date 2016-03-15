@@ -12,6 +12,7 @@ obj_Flow_6>Representante Si]
 obj_Flow_5>Representante No]
 bpel_SolicitudLectoresCDs[Solicitud Lectores]
 bpel_Invoke_CrearTarjeta[Crear Tarjeta]
+bpel_Receive_CrearTarjeta[Crear Tarjeta]
 obj_Notificar>Tarjeta terminada]
 ht_DatosLiquidacion(Datos Liquidacion)
 ht_RecepcionNotificacionDefinitiva(Recepcion Notificacion Definitiva)
@@ -32,12 +33,13 @@ ws_Generar_Contrato-->ws_DatosLDAP
 ws_DatosLDAP-->obj_PedirTarjeta
 obj_PedirTarjeta-->obj_Flow_6
 obj_PedirTarjeta-->obj_Flow_5
-obj_Flow_6-->bpel_SolicitudLectoresCDs
 obj_Flow_6-->bpel_Invoke_CrearTarjeta
+obj_Flow_6-->bpel_SolicitudLectoresCDs
 obj_Flow_5-->bpel_SolicitudLectoresCDs
-obj_Flow_5-->bpel_Invoke_CrearTarjeta
+obj_Flow_5-->bpel_Receive_CrearTarjeta
 bpel_SolicitudLectoresCDs-->obj_Notificar
 bpel_Invoke_CrearTarjeta-->obj_Notificar
+bpel_Receive_CrearTarjeta-->obj_Notificar
 obj_Notificar-->ht_DatosLiquidacion
 obj_Notificar-->ht_RecepcionNotificacionDefinitiva
 obj_Notificar-->ht_ConfirmacionSujetoMercado
@@ -58,4 +60,4 @@ classDef wsError fill:#6EABD0,stroke:#FF0000,stroke-width:3px;
 class obj_Flow_6,obj_Flow_5,obj_Notificar,obj_AsignarSalida obj_info;
 class obj_Switch_1,obj_PedirTarjeta obj;
 
-linkStyle 0 stroke-width:2px,fill:none,stroke:green;
+linkStyle 0 stroke-width:2px,fill:none,stroke:green,stroke-dasharray: 5, 5;

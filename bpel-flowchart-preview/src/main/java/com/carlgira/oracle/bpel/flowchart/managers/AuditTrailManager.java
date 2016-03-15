@@ -3,6 +3,7 @@ package com.carlgira.oracle.bpel.flowchart.managers;
 import com.carlgira.util.JAXBMarshaller;
 import com.oracle.schemas.bpel.audit_trail.AuditTrail;
 import com.oracle.schemas.bpel.audit_trail.Event;
+import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
 
 /**
  * Created by carlgira on 08/03/2016.
@@ -14,7 +15,7 @@ public class AuditTrailManager {
 
     /**
      * Parse a xmlString to an auditTrail object
-     * @param xmlContent
+     * @param xmlContent The whole content of the audit trail
      */
     public AuditTrailManager(String xmlContent) {
         this.auditTrail = (AuditTrail) JAXBMarshaller.unmarshallString(xmlContent, AuditTrail.class);
@@ -22,7 +23,7 @@ public class AuditTrailManager {
 
     /**
      * Search inside the AuditTrail for a Event with the specified label
-     * @param label
+     * @param label The label of the node (the activity name in the bpel)
      * @return
      */
     public Event getEvent(String label){
@@ -36,14 +37,14 @@ public class AuditTrailManager {
 
     /**
      * Search inside the AuditTrail for a Event with the specified label and in error state
-     * @param label
+     * @param label The label of the node (the activity name in the bpel)
      * @return
      */
     public Event getEventWithError(String label){
         for(Event eventType : this.auditTrail.getEvent()){
             if( (eventType.getLabel()  != null  && eventType.getState() != null)  &&
                     (label.equals(eventType.getLabel()) || eventType.getLabel().startsWith(label + " ")) &&
-                    Integer.parseInt(eventType.getState()) > 5 // Any number greater than 5 is and error state
+                    Integer.parseInt(eventType.getState()) > 5 // Any number greater than 5 is an error state
                     ) {
                 return eventType;
             }
@@ -53,15 +54,15 @@ public class AuditTrailManager {
 
     /**
      * Search inside the AuditTrail for a Event with the specified label and specified state
-     * @param label
-     * @param state
+     * @param label The label of the node (the activity name in the bpel)
+     * @param state Number of the state of the node
      * @return
      */
-    public Event getEvent(String label, String state){
+    public Event getEvent(String label, Integer state){
         for(Event eventType : this.auditTrail.getEvent()){
             if( (eventType.getLabel()  != null  && eventType.getState() != null)  &&
                     (label.equals(eventType.getLabel()) || eventType.getLabel().startsWith(label + " ")) &&
-                    eventType.getState().equals(state)
+                    eventType.getState().equals("" + state)
                     ) {
                 return eventType;
             }

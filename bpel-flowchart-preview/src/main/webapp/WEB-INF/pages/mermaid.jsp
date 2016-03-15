@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
-    <!-- <link href="<c:url value="/resources/css/mermaid.css" />" rel="stylesheet"> -->
-    <link href="/bpel-flowchart-preview/resources/css/mermaid.css" rel="stylesheet">
+    <link href="<c:url value="/resources/css/mermaid.css" />" rel="stylesheet">
+    <!-- <link href="/bpel-flowchart-preview/resources/css/mermaid.css" rel="stylesheet"> -->
     <style>
     	body {
     		background-color: linen;
@@ -13,8 +13,8 @@
     		margin-left: 40px;
     	}
     </style>
-    <!-- <script src="<c:url value="/resources/js/mermaid.min.js" />"></script> -->
-    <script src="/bpel-flowchart-preview/resources/js/mermaid.min.js"></script>
+    <script src="<c:url value="/resources/js/mermaid.min.js" />"></script>
+    <!-- <script src="/bpel-flowchart-preview/resources/js/mermaid.min.js"></script> -->
     <script>
     		var config = {
                 startOnLoad:true,

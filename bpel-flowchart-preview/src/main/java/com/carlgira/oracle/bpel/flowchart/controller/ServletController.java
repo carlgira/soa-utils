@@ -1,24 +1,22 @@
 package com.carlgira.oracle.bpel.flowchart.controller;
 
-import com.carlgira.oracle.bpel.flowchart.BPELFlowChartPreview;
-import com.carlgira.util.ServerConnection;
-import oracle.soa.management.CompositeDN;
-import org.apache.commons.codec.binary.Base64;
+import com.carlgira.oracle.bpel.flowchart.MermaidJSGraphBuilder;
+import com.carlgira.oracle.bpel.flowchart.MainBPELPreview;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.*;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
  * Created by carlgira on 08/03/2016.
- * Service with the call
+ * Class with two services to get the mermaid.js graph.
+ * One service returns the text version of the graph so the browser render the image, the other service use the mermaid utility to create directly a png image, the rendered image is returned. (I just create this version for compatibility version of mermaid.js with ie9 and ie10)
  */
 
 @Controller
@@ -29,107 +27,111 @@ public class ServletController {
         loadProperties();
     }
 
+    /**
+     * Service that returns a page with the mermaid.js in text (using a template graph of a bpel instance)
+     * This service check the state of the bpel instance and updates the graph template to see the actual state of the bpel.
+     * @param partition The Soa Partition where the bpel reside deployed
+     * @param composite The CompositeName
+     * @param version The version of the composite
+     * @param bpel The bpel name
+     * @param bpelid The bpelid of the instance
+     * @return
+     */
     @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchart")
     public ModelAndView flowChart(@PathVariable("partition") String partition,
                             @PathVariable("composite") String composite,
                             @PathVariable("version") String version,
                             @PathVariable("bpel") String bpel,
                             @RequestParam(value = "bpelid", required = true) String bpelid
-                            ) throws Exception {
-
-        String server = properties.getProperty("server");
-        String user = properties.getProperty("user");
-        String pass = properties.getProperty("password");
-        String realm = properties.getProperty("realm");
-        String graph_dir = properties.getProperty("graph_dir");
-        String graphFile =  partition + "." + composite + "." + version + "." + bpel;
-
-        ServerConnection serverConnection = new ServerConnection(server,user,pass, realm);
-
-        File file = new File(graph_dir + "/" + graphFile  + ".txt");
-
-        if(!file.exists()){
-            throw new Exception("No config files for input, " + graphFile);
-        }
-
-        BPELFlowChartPreview bpelFlowChartController = new BPELFlowChartPreview(serverConnection, file.getAbsolutePath());
-
-        CompositeDN compositeDN = new CompositeDN(partition + "/" + composite + "!" + version);
-
-        bpelFlowChartController.buildNodes(compositeDN, bpel, bpelid);
-        bpelFlowChartController.drawLinks();
-
+                            ) {
         ModelAndView model = new ModelAndView("mermaid");
-        model.addObject("graph", bpelFlowChartController.writeResponse());
         model.addObject("process", bpel);
-        model.addObject("state", translateState(bpelFlowChartController.getBpelInstance().getState()));
-        model.addObject("status", bpelFlowChartController.getBpelInstance().getStatus());
+
+        MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
+        try {
+            mainBPELPreview.bpelPreviewGraph(partition, composite, version, bpel, bpelid);
+        } catch (Exception e) {
+            model.addObject("state", e.getMessage());
+            return model;
+        }
+        MermaidJSGraphBuilder mermaidJSGraphBuilder = mainBPELPreview.getBpelFlowChartController();
+
+        model.addObject("graph", mermaidJSGraphBuilder.writeResponse());
+        model.addObject("state", translateState(mermaidJSGraphBuilder.getBpelInstance().getState()));
 
         return model;
     }
 
+    /**
+     * Service that returns a page with the mermaid.js in a image. (using a template graph of a bpel instance)
+     * This service check the state of the bpel instance and updates the graph template to see the actual state of the bpel.
+     * This version use the mermaid utility to create the png image from the graph file. (Make sure to install the mermaid utility and configure it in the property file)
+     * @param partition The Soa Partition where the bpel reside deployed
+     * @param composite The CompositeName
+     * @param version The version of the composite
+     * @param bpel The bpel name
+     * @param bpelid The bpelid of the instance
+     * @return
+     */
     @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchartImg")
-    public ModelAndView flowChartImg(@PathVariable("partition") String partition,
+    public ModelAndView flowChartImgString(@PathVariable("partition") String partition,
                                   @PathVariable("composite") String composite,
                                   @PathVariable("version") String version,
                                   @PathVariable("bpel") String bpel,
                                   @RequestParam(value = "bpelid", required = true) String bpelid
-    ) throws Exception {
-
-        String server = properties.getProperty("server");
-        String user = properties.getProperty("user");
-        String pass = properties.getProperty("password");
-        String realm = properties.getProperty("realm");
-        String graph_dir = properties.getProperty("graph_dir");
-        String graphFile =  partition + "." + composite + "." + version + "." + bpel;
-
-        ServerConnection serverConnection = new ServerConnection(server,user,pass, realm);
-
-        File file = new File(graph_dir + "/" + graphFile  + ".txt");
-
-        if(!file.exists()){
-            throw new Exception("No config files for input, " + graphFile);
-        }
-
-        BPELFlowChartPreview bpelFlowChartController = new BPELFlowChartPreview(serverConnection, file.getAbsolutePath());
-
-        CompositeDN compositeDN = new CompositeDN(partition + "/" + composite + "!" + version);
-
-        bpelFlowChartController.buildNodes(compositeDN, bpel, bpelid);
-        bpelFlowChartController.drawLinks();
+    )  {
 
         ModelAndView model = new ModelAndView("mermaidImg");
-
-        String nodePath = "D:\\Usuarios\\emateo\\apps\\nodejs-portable\\node\\";
-        String nodeBin = nodePath + "node.exe";
-        String mermaidJS = nodePath + "node_modules\\mermaid\\bin\\mermaid.js";
-        String phatomJS = nodePath + "node_modules\\phantomjs\\lib\\phantom\\phantomjs.exe";
-        String outputDir = "D:\\";
-        String filePath = nodePath + "node_modules\\mermaid\\bin\\altaAgentes.mmd";
-
-
-        File tempGraph = new File("");
-        FileWriter fileWriter = new FileWriter(tempGraph);
-        fileWriter.write(bpelFlowChartController.writeResponse());
-        fileWriter.flush();
-
-        String command = "cmd /c " + nodeBin + " " + mermaidJS + " -e " + phatomJS + " " + " -o " + outputDir + " " +  filePath ;
-        Process process = Runtime.getRuntime().exec(command);
-        process.waitFor();
-
-        String imageDataString = Base64.encodeBase64String(Files.readAllBytes(Paths.get("D:\\altaAgentes.mmd.png")));
-
-
-
-        model.addObject("graph", bpelFlowChartController.writeResponse());
         model.addObject("process", bpel);
-        model.addObject("state", translateState(bpelFlowChartController.getBpelInstance().getState()));
-        model.addObject("status", bpelFlowChartController.getBpelInstance().getStatus());
+
+        MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
+        try {
+            mainBPELPreview.bpelPreviewGraphImgString(partition, composite, version, bpel, bpelid);
+        } catch (Exception e) {
+            model.addObject("state", e.getMessage());
+            return model;
+        }
+        MermaidJSGraphBuilder mermaidJSGraphBuilder = mainBPELPreview.getBpelFlowChartController();
+
+        model.addObject("graph", mainBPELPreview.getImageString());
+        model.addObject("state", translateState(mermaidJSGraphBuilder.getBpelInstance().getState()));
 
         return model;
     }
 
-    public static void loadProperties() {
+    /**
+     * Service that returns a imgage with the mermaid.js graph. (
+     * This service check the state of the bpel instance and updates the graph template to see the actual state of the bpel.
+     * This version use the mermaid utility to create the png image from the graph file. (Make sure to install
+     * @param partition The Soa Partition where the bpel reside deployed
+     * @param composite The CompositeName
+     * @param version The version of the composite
+     * @param bpel The bpel name
+     * @param bpelid The bpelid of the instance
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/img")
+    public ResponseEntity<byte[]> flowChartImg(@PathVariable("partition") String partition,
+                                               @PathVariable("composite") String composite,
+                                               @PathVariable("version") String version,
+                                               @PathVariable("bpel") String bpel,
+                                               @RequestParam(value = "bpelid", required = true) String bpelid) throws Exception {
+
+        MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
+        mainBPELPreview.bpelPreviewGraphImgString(partition, composite, version, bpel, bpelid);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        return new ResponseEntity<>(mainBPELPreview.getImage(), headers,HttpStatus.OK);
+    }
+
+
+    /**
+     * Load properties function
+     */
+    private static void loadProperties() {
         String configFile = System.getProperty("bpel-flowchart-preview");
         try {
             properties = new Properties();
@@ -140,6 +142,11 @@ public class ServletController {
         }
     }
 
+    /**
+     * Translate the bpel state into a string
+     * @param state
+     * @return
+     */
     public String translateState(int state){
 
         String result = "";

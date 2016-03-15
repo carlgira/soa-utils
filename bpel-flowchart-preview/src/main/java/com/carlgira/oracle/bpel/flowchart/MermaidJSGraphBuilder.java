@@ -26,13 +26,13 @@ import java.util.Map;
 /**
  * Created by carlgira on 07/03/2016.
  * Class to modify a mermaid.js graph template using a real bpel instance.
- * Every nodeId of mermaid.js graph, must be the name of an activity inside of the bpel. (scopes, assigns, invoke, receives, swithcs etc)
- * There are 5 different types of nodeId (ht, init, fn, bpel, ws, obj, obj_info) but the are only two types of behaviors, one for the human task (ht) and other for every other types.
+ * Every nodeId of mermaid.js graph, must be the name of an activity inside of the bpel. (scopes, assigns, invoke, receives, switch etc)
+ * There are 6 different types of nodeId (ht, init, fn, bpel, ws, obj) but the are only two types of behaviors, one for the human task (ht) and other for the other types.
  *    - The human task type, connects directly to the HumanTaskEngine and check if the human task has been executed and whats the outcome.
  *    - The other types use to the BpelInstace auditTrail and check if the nodes in the mermaid.js are executed.
- * To draw the links between the nodes, there is a little algorithm to see what nodes are active (and active node is a executed node) it simply adds some style to a link between two active nodes (dashed green line)
+ * To draw the links between the nodes, there is a little algorithm to see what nodes are active (an active node is a executed node) it simply adds some style to a link object between two active nodes (dashed green line)
  */
-public class BPELFlowChartPreview {
+public class MermaidJSGraphBuilder {
 
     private Map<String, Node> nodes;
     private Map<String, List<Node>> nodesByType;
@@ -53,7 +53,7 @@ public class BPELFlowChartPreview {
      * @param graphFile
      * @throws Exception
      */
-    public BPELFlowChartPreview(ServerConnection serverConnection, String graphFile) throws Exception {
+    public MermaidJSGraphBuilder(ServerConnection serverConnection, String graphFile) throws Exception {
         this.restOfFile = new ArrayList<>();
         this.nodes = new HashMap<>();
         this.links = new HashMap<>();
@@ -93,6 +93,10 @@ public class BPELFlowChartPreview {
 
         this.bpelInstance = compositeManager.getBPELById(compositeDN, componentName, componentId);
 
+        if(bpelInstance == null){
+            throw new Exception("BPEL Instance not found");
+        }
+
         if(!this.nodesByType.get(TypeOfNode.NODE_HT).isEmpty()){
             HtQuery htQuery = new HtQuery(TableConstants.WFTASK_COMPOSITEINSTANCEID_COLUMN, Predicate.OP_EQ, bpelInstance.getCompositeInstanceId());
             HtQuery htQuery1 = new HtQuery(TableConstants.WFTASK_WORKFLOWPATTERN_COLUMN, Predicate.OP_EQ, "Participant");
@@ -118,7 +122,7 @@ public class BPELFlowChartPreview {
     }
 
     /**
-     * Check the mermaid graph against the task on the composite. If a graph task
+     * Check the mermaid graph against the task on the composite. If the task has been completed, the mermaid.js node graph is set to active.
      * @param tasks
      */
     private void buildHTNodes(List<Task> tasks) {
@@ -133,24 +137,40 @@ public class BPELFlowChartPreview {
                             if (link.beginNode.contains(node.id)) {
                                 link.message = task.getSystemAttributes().getOutcome();
                                 this.listOfLinks.set(i, link);
-                                node.active = true;
+                                node.setActive(true);
                                 this.nodes.put(node.id, node);
                             }
                         }
+                    }
+                    else{
+                        node.initiated = true;
+                        this.nodes.put(node.id, node);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Check the mermaid graph against the object in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active.
+     * @param auditTrailManager
+     */
     private void buildOBJNodes(AuditTrailManager auditTrailManager){
         activateNodes(auditTrailManager, TypeOfNode.NODE_OBJ);
     }
 
+    /**
+     * Check the mermaid graph against the object in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active.
+     * @param auditTrailManager
+     */
     private void buildFNNodes(AuditTrailManager auditTrailManager){
         activateNodes(auditTrailManager, TypeOfNode.NODE_FN);
     }
 
+    /**
+     * Check the mermaid graph against the object in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active.
+     * @param auditTrailManager
+     */
     private void buildINITNodes(AuditTrailManager auditTrailManager){
         activateNodes(auditTrailManager, TypeOfNode.NODE_INIT);
     }
@@ -163,23 +183,36 @@ public class BPELFlowChartPreview {
      */
     private void activateNodes(AuditTrailManager auditTrailManager, String type){
         for(Node node : this.nodesByType.get(type)){
-            if(auditTrailManager.getEvent(node.id) != null){
-                node.active = true;
+
+            if(auditTrailManager.getEvent(node.id,5) != null){
+                node.setActive(true);
+                this.nodes.put(node.id, node);
+            }
+            else if(auditTrailManager.getEvent(node.id) != null){
+                node.initiated = true;
                 this.nodes.put(node.id, node);
             }
         }
     }
 
+    /**
+     * Check the mermaid graph against the webservice call in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active, if the call return error the node style is changed.
+     * @param auditTrailManager
+     */
     private void buildWSNodes(AuditTrailManager auditTrailManager){
         for(Node node : this.nodesByType.get(TypeOfNode.NODE_WS)){
-            if(auditTrailManager.getEvent(node.id, "5") != null){
-                node.active = true;
+            if(auditTrailManager.getEvent(node.id, 1) != null){
+                node.initiated = true;
+                this.nodes.put(node.id, node);
+            }
+            if(auditTrailManager.getEvent(node.id, 5) != null){
+                node.setActive(true);
                 this.nodes.put(node.id, node);
             }
             else {
                 Event e = auditTrailManager.getEventWithError(node.id);
                 if(e != null){
-                    node.active = true;
+                    node.setActive(true);
                     node.state = Integer.parseInt(e.getState());
                     this.nodes.put(node.id, node);
                 }
@@ -187,16 +220,24 @@ public class BPELFlowChartPreview {
         }
     }
 
+    /**
+     * Check the mermaid graph against a sub-bpel call in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active, if the call return error the node style is changed.
+     * @param auditTrailManager
+     */
     private void buildBPELNodes(AuditTrailManager auditTrailManager){
         for(Node node : this.nodesByType.get(TypeOfNode.NODE_BPEL)){
-            if(auditTrailManager.getEvent(node.id, "5") != null){
-                node.active = true;
+            if(auditTrailManager.getEvent(node.id, 1) != null){
+                node.initiated = true;
+                this.nodes.put(node.id, node);
+            }
+            if(auditTrailManager.getEvent(node.id, 5) != null){
+                node.setActive(true);
                 this.nodes.put(node.id, node);
             }
             else {
                 Event e = auditTrailManager.getEventWithError(node.id);
                 if(e != null){
-                    node.active = true;
+                    node.setActive(true);
                     node.state = Integer.parseInt(e.getState());
                     this.nodes.put(node.id, node);
                 }
@@ -204,6 +245,9 @@ public class BPELFlowChartPreview {
         }
     }
 
+    /**
+     * Add style to all types of node. Each kind of node has a style class for a completed state or an error state.
+     */
     private void buildStyles(){
 
         String[] htStyles = buildStyle(TypeOfNode.NODE_HT);
@@ -239,6 +283,11 @@ public class BPELFlowChartPreview {
         this.restOfFile.add("\n");
     }
 
+    /**
+     * Auximilar function to build the style of the nodes.
+     * @param type
+     * @return
+     */
     private String[] buildStyle(String type){
         String okClass = "";
         String errorClass = "";
@@ -255,15 +304,43 @@ public class BPELFlowChartPreview {
         return new String[]{okClass, errorClass};
     }
 
+    /**
+     * The template graph file must have in their last line of the file, the "linkstyle 0", with the apropiated style for the executed link.
+     * This functions adds styles to all links between active nodes.
+     */
     public void drawLinks(){
         for(int i= 0;i < this.listOfLinks.size();i++){
             Link link = this.listOfLinks.get(i);
             Node beginNode = this.nodes.get(link.beginNode.substring(link.beginNode.indexOf("_") +1));
             Node endNode = this.nodes.get(link.endNode.substring(link.endNode.indexOf("_")+1));
-            if(beginNode.active && endNode.active){
+            if(beginNode.initiated && endNode.initiated && hasParents(beginNode)){
+                this.restOfFile.add(this.linkStyle.replace("linkStyle 0", "linkStyle " + i));
+            }
+            else if(this.links.get(beginNode.type + "_" + beginNode.id) != null &&
+                    this.links.get(beginNode.type + "_" + beginNode.id).size() == 1 &&
+                    beginNode.getActive() && hasParents(beginNode)){
                 this.restOfFile.add(this.linkStyle.replace("linkStyle 0", "linkStyle " + i));
             }
         }
+    }
+
+    /**
+     * Aditional checks to avoid problems with concurrent paths and repetitive names
+     * @param node
+     * @return
+     */
+    private boolean hasParents(Node node){
+
+        if(node.type.equals(TypeOfNode.NODE_INIT)){
+            return true;
+        }
+            for(Link link : this.listOfLinks){
+                Node parentNode = this.nodes.get(link.beginNode.substring(link.beginNode.indexOf("_")+1));
+                if(link.endNode.equals(node.type + "_" + node.id) && (parentNode.getActive() || parentNode.initiated)){
+                    return true;
+                }
+            }
+        return false;
     }
 
     /**
@@ -332,6 +409,7 @@ public class BPELFlowChartPreview {
             } else {
                 List<Node> listNodes = new ArrayList<>();
                 listNodes.add(this.nodes.get(link.beginNode));
+                this.links.put(link.beginNode, listNodes);
             }
             index++;
         }

@@ -12,7 +12,8 @@ public class Node {
     public String type;
     public String message;
     public String originalLine;
-    public Boolean active = false;
+    private Boolean active = false;
+    public Boolean initiated = false;
     public Integer state = 1;
 
     private static Pattern patternRoundedNode = Pattern.compile("(^[obj_|ht_|bpel_|ws_|init_|fn_]*)([^\\(\\[\\{>]+)(>|\\[|\\{|\\(|\\(\\()([^\\(\\)\\[\\]\\}]+)(]|\\]|\\}|\\)\\)|\\))");
@@ -60,5 +61,14 @@ public class Node {
                 ", type='" + type + '\'' +
                 ", message='" + message + '\'' +
                 '}';
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+        this.initiated = active ? active : this.initiated;
+    }
+
+    public Boolean getActive() {
+        return active;
     }
 }
