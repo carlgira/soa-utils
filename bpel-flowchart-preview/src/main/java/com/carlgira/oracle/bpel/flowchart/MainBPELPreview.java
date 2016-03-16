@@ -12,7 +12,7 @@ import java.util.Properties;
 
 /**
  * Created by carlgira on 15/03/2016.
- * Class with main functions to  process the bpel graph.
+ * Class with main functions to  process the mermaid.js graph.
  */
 public class MainBPELPreview {
 
@@ -30,7 +30,16 @@ public class MainBPELPreview {
         node_command = properties.getProperty("node_command");
     }
 
-    public void bpelPreviewGraph(String partition, String composite, String version, String bpel, String bpelid ) throws Exception {
+    /**
+     * Main function to build the mermaid graph
+     * @param partition The Soa Partition where the bpel reside deployed
+     * @param composite The CompositeName
+     * @param version The version of the composite
+     * @param bpel The bpel name
+     * @param bpelid The bpelid of the instance
+     * @throws Exception
+     */
+    public void buildMermaidJSGraph(String partition, String composite, String version, String bpel, String bpelid ) throws Exception {
 
         String templateGraphFile = partition + "." + composite + "." + version + "." + bpel;
         ServerConnection serverConnection = new ServerConnection(server,user,pass, realm);
@@ -48,10 +57,19 @@ public class MainBPELPreview {
         bpelFlowChartController.drawLinks();
     }
 
-    public void bpelPreviewGraphImgString(String partition, String composite, String version, String bpel, String bpelid ) throws Exception {
+    /**
+     * Main function to build the mermaid graph in image format.
+     * @param partition The Soa Partition where the bpel reside deployed
+     * @param composite The CompositeName
+     * @param version The version of the composite
+     * @param bpel The bpel name
+     * @param bpelid The bpelid of the instance
+     * @throws Exception
+     */
+    public void buildMermaidJSGraphImage(String partition, String composite, String version, String bpel, String bpelid ) throws Exception {
 
         try {
-            bpelPreviewGraph(partition, composite, version, bpel, bpelid);
+            buildMermaidJSGraph(partition, composite, version, bpel, bpelid);
 
             String graph = graph_dir + "\\temp\\" + bpelid + ".mmd";
             File tempGraph = new File(graph);
@@ -76,38 +94,11 @@ public class MainBPELPreview {
         }
     }
 
-    public void bpelPreviewGraphImg(String partition, String composite, String version, String bpel, String bpelid ) throws Exception {
-
-        try {
-            bpelPreviewGraph(partition, composite, version, bpel, bpelid);
-
-            String graph = graph_dir + "\\temp\\" + bpelid + ".mmd";
-            File tempGraph = new File(graph);
-            FileWriter fileWriter = new FileWriter(tempGraph);
-            fileWriter.write(bpelFlowChartController.writeResponse());
-            fileWriter.flush();
-            fileWriter.close();
-
-            String command = node_command;
-            command = String.format(command, graph_dir + "\\temp", graph);
-
-            Process process = Runtime.getRuntime().exec(command);
-            process.waitFor();
-
-            this.imgContent = Files.readAllBytes(Paths.get(graph + ".png"));
-
-        } catch (IOException e) {
-            throw new Exception("Problem reading template graph file");
-        } catch (InterruptedException e) {
-            throw new Exception("Problem executing rendering image");
-        }
-    }
-
     public MermaidJSGraphBuilder getBpelFlowChartController() {
         return bpelFlowChartController;
     }
 
-    public String getImageString() {
+    public String getImageBase64() {
         return Base64.encodeBase64String(imgContent);
     }
 

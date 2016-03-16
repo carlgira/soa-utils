@@ -15,17 +15,15 @@ import static org.junit.Assert.*;
 /**
  * Created by carlgira on 08/03/2016.
  */
-public class BPELFlowChartPreviewTest {
+public class MermaidJSGraphTest {
 
     private Properties prop;
     private ClassLoader classLoader;
 
-    public BPELFlowChartPreviewTest() throws IOException {
-        classLoader = BPELFlowChartPreviewTest.class.getClassLoader();
+    public MermaidJSGraphTest() throws IOException {
+        classLoader = MermaidJSGraphTest.class.getClassLoader();
         prop = new Properties();
         prop.load(classLoader.getResource("bpel-flowchart-preview.properties").openStream());
-
-
     }
 
     public String testMermaidGraph(CompositeDN compositeDN, String bpel, String bpelid ) throws Exception {
@@ -70,19 +68,17 @@ public class BPELFlowChartPreviewTest {
     }
 
     public static void main(String args[]) throws Exception {
-
         CompositeDN compositeDN = new CompositeDN("Agentes/AltaAgentes!5.5");
         String bpel = "AltaAgentes";
         String bpelid = "8500013";
 
-        BPELFlowChartPreviewTest bpelFlowChartPreviewTest = new BPELFlowChartPreviewTest();
+        MermaidJSGraphTest bpelFlowChartPreviewTest = new MermaidJSGraphTest();
 
         String graph = bpelFlowChartPreviewTest.testMermaidGraph(compositeDN, bpel, bpelid);
         System.out.println(graph);
         assertNotNull(graph);
-/*
+
         String graphImg = bpelFlowChartPreviewTest.testMermaidGraphImg(bpelid,graph );
         assertNotNull(graphImg);
-        */
     }
 }

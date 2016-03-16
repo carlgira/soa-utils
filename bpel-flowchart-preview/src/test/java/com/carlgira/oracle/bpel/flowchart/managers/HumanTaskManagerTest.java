@@ -12,17 +12,20 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by emateo on 08/03/2016.
+ * Created by carlgira on 08/03/2016.
  */
 public class HumanTaskManagerTest {
 
-    public static void main(String args[]) throws WorkflowException, IOException {
+    private Properties prop;
+    private ClassLoader classLoader;
 
-        ClassLoader classLoader = HumanTaskManagerTest.class.getClassLoader();
-
-        Properties prop = new Properties();
+    public HumanTaskManagerTest() throws IOException {
+        classLoader = HumanTaskManagerTest.class.getClassLoader();
+        prop = new Properties();
         prop.load(classLoader.getResource("bpel-flowchart-preview.properties").openStream());
+    }
 
+    public List<Task> testHumanTaskManager() throws WorkflowException {
         String server = prop.getProperty("server");
         String user = prop.getProperty("user");
         String pass = prop.getProperty("password");
@@ -34,13 +37,19 @@ public class HumanTaskManagerTest {
         HumanTaskManager humanTaskManager = new HumanTaskManager(serverConnection);
         humanTaskManager.init();
         HtQuery htQuery = new HtQuery(TableConstants.WFTASK_COMPOSITEINSTANCEID_COLUMN, Predicate.OP_EQ, compositeId);
-        HtQuery htQuery1 = new HtQuery(TableConstants.WFTASK_WORKFLOWPATTERN_COLUMN, Predicate.OP_EQ, "Participant");
+        HtQuery htQuery1 = new HtQuery(TableConstants.WFTASK_WORKFLOWPATTERN_COLUMN, Predicate.OP_EQ, "Participant"); // Not FYI
 
         List<HtQuery> htQueryList = new ArrayList<>();
         htQueryList.add(htQuery);
         htQueryList.add(htQuery1);
 
-        List<Task> tasks = humanTaskManager.getTasklist(htQueryList);
+        return humanTaskManager.getTasklist(htQueryList);
+    }
+
+    public static void main(String args[]) throws WorkflowException, IOException {
+
+        HumanTaskManagerTest humanTaskManagerTest = new HumanTaskManagerTest();
+        List<Task> tasks = humanTaskManagerTest.testHumanTaskManager();
 
         for(Task task: tasks){
             System.out.println(task.getTaskDefinitionId() + " " + task.getSystemAttributes().getOutcome()
@@ -49,6 +58,5 @@ public class HumanTaskManagerTest {
                     + " " + task.getSystemAttributes().getWorkflowPattern()
             );
         }
-
     }
 }

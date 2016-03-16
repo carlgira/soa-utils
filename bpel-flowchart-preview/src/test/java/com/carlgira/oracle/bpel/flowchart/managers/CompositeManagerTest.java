@@ -4,39 +4,45 @@ import com.carlgira.util.ServerConnection;
 import oracle.soa.management.CompositeDN;
 import oracle.soa.management.facade.bpel.BPELInstance;
 
+import java.io.IOException;
 import java.util.Properties;
+import static org.junit.Assert.*;
 
 /**
- * Created by emateo on 08/03/2016.
+ * Created by carlgira on 08/03/2016.
  */
 public class CompositeManagerTest {
 
-    public static void main(String args[]) throws Exception {
+    private Properties prop;
+    private ClassLoader classLoader;
 
+    public CompositeManagerTest() throws IOException {
         ClassLoader classLoader = CompositeManagerTest.class.getClassLoader();
-
         Properties prop = new Properties();
         prop.load(classLoader.getResource("bpel-flowchart-preview.properties").openStream());
+    }
 
+    public BPELInstance testCompositeManager(String bpelid) throws Exception {
         String server = prop.getProperty("server");
         String user = prop.getProperty("user");
         String pass = prop.getProperty("password");
         String realm = prop.getProperty("realm");
 
-        String partition = "Agentes";
-        String composite = "AltaAgentes";
-        String version = "5.5";
         String componentName = "AltaAgentes";
 
-        String bpelid = "8320045";
-
-        CompositeDN compositeDN = new CompositeDN(partition+"/"+composite+"!"+version);
+        CompositeDN compositeDN = new CompositeDN("Agentes/AltaAgentes!5.5");
 
         ServerConnection serverConnection = new ServerConnection(server, user, pass, realm);
 
         CompositeManager compositeManager = new CompositeManager(serverConnection);
         compositeManager.init();
 
-        BPELInstance bpelInstance = compositeManager.getBPELById(compositeDN, componentName, bpelid);
+        return compositeManager.getBPELById(compositeDN, componentName, bpelid);
+    }
+
+    public static void main(String args[]) throws Exception {
+        CompositeManagerTest compositeManagerTest = new CompositeManagerTest();
+        BPELInstance bpelInstance = compositeManagerTest.testCompositeManager("8320045");
+        assertNotNull(bpelInstance);
     }
 }

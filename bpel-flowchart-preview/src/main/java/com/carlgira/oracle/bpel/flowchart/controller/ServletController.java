@@ -37,7 +37,7 @@ public class ServletController {
      * @param bpelid The bpelid of the instance
      * @return
      */
-    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchart")
+    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchart.htm")
     public ModelAndView flowChart(@PathVariable("partition") String partition,
                             @PathVariable("composite") String composite,
                             @PathVariable("version") String version,
@@ -49,7 +49,7 @@ public class ServletController {
 
         MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
         try {
-            mainBPELPreview.bpelPreviewGraph(partition, composite, version, bpel, bpelid);
+            mainBPELPreview.buildMermaidJSGraph(partition, composite, version, bpel, bpelid);
         } catch (Exception e) {
             model.addObject("state", e.getMessage());
             return model;
@@ -57,8 +57,6 @@ public class ServletController {
         MermaidJSGraphBuilder mermaidJSGraphBuilder = mainBPELPreview.getBpelFlowChartController();
 
         model.addObject("graph", mermaidJSGraphBuilder.writeResponse());
-        model.addObject("state", translateState(mermaidJSGraphBuilder.getBpelInstance().getState()));
-
         return model;
     }
 
@@ -73,7 +71,7 @@ public class ServletController {
      * @param bpelid The bpelid of the instance
      * @return
      */
-    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchartImg")
+    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchartImg.htm")
     public ModelAndView flowChartImgString(@PathVariable("partition") String partition,
                                   @PathVariable("composite") String composite,
                                   @PathVariable("version") String version,
@@ -86,15 +84,14 @@ public class ServletController {
 
         MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
         try {
-            mainBPELPreview.bpelPreviewGraphImgString(partition, composite, version, bpel, bpelid);
+            mainBPELPreview.buildMermaidJSGraphImage(partition, composite, version, bpel, bpelid);
         } catch (Exception e) {
             model.addObject("state", e.getMessage());
             return model;
         }
         MermaidJSGraphBuilder mermaidJSGraphBuilder = mainBPELPreview.getBpelFlowChartController();
 
-        model.addObject("graph", mainBPELPreview.getImageString());
-        model.addObject("state", translateState(mermaidJSGraphBuilder.getBpelInstance().getState()));
+        model.addObject("graph", mainBPELPreview.getImageBase64());
 
         return model;
     }
@@ -111,7 +108,7 @@ public class ServletController {
      * @return
      * @throws Exception
      */
-    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/img")
+    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/img.png")
     public ResponseEntity<byte[]> flowChartImg(@PathVariable("partition") String partition,
                                                @PathVariable("composite") String composite,
                                                @PathVariable("version") String version,
@@ -119,7 +116,7 @@ public class ServletController {
                                                @RequestParam(value = "bpelid", required = true) String bpelid) throws Exception {
 
         MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
-        mainBPELPreview.bpelPreviewGraphImgString(partition, composite, version, bpel, bpelid);
+        mainBPELPreview.buildMermaidJSGraphImage(partition, composite, version, bpel, bpelid);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
@@ -127,6 +124,32 @@ public class ServletController {
         return new ResponseEntity<>(mainBPELPreview.getImage(), headers,HttpStatus.OK);
     }
 
+    /**
+     * Service that returns the mermaid.js text. (
+     * This service check the state of the bpel instance and updates the graph template to see the actual state of the bpel.
+     * @param partition The Soa Partition where the bpel reside deployed
+     * @param composite The CompositeName
+     * @param version The version of the composite
+     * @param bpel The bpel name
+     * @param bpelid The bpelid of the instance
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchartString.htm")
+    public String flowChartString(@PathVariable("partition") String partition,
+                                               @PathVariable("composite") String composite,
+                                               @PathVariable("version") String version,
+                                               @PathVariable("bpel") String bpel,
+                                               @RequestParam(value = "bpelid", required = true) String bpelid) throws Exception {
+        MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
+        try {
+            mainBPELPreview.buildMermaidJSGraph(partition, composite, version, bpel, bpelid);
+        } catch (Exception e) {
+            return null;
+        }
+
+        return mainBPELPreview.getBpelFlowChartController().writeResponse();
+    }
 
     /**
      * Load properties function
@@ -140,53 +163,5 @@ public class ServletController {
         catch(Exception e){
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Translate the bpel state into a string
-     * @param state
-     * @return
-     */
-    public String translateState(int state){
-
-        String result = "";
-
-        switch (state)
-        {
-            case 0:
-                result = "INITIATED";
-                break;
-            case 1:
-                result = "OPEN_RUNNING";
-                break;
-            case 2:
-                result = "OPEN_SUSPENDED";
-                break;
-            case 3:
-                result = "OPEN_FAULTED";
-                break;
-            case 4:
-                result = "CLOSED_PENDING_CANCEL";
-                break;
-            case 5:
-                result = "CLOSED_COMPLETED";
-                break;
-            case 6:
-                result = "CLOSED_FAULTED";
-                break;
-            case 7:
-                result = "CLOSED_CANCELLED";
-                break;
-            case 8:
-                result = "CLOSED_ABORTED";
-                break;
-            case 9:
-                result = "CLOSED_STALE";
-                break;
-            case 10:
-                result = "CLOSED_ROLLED_BACK";
-                break;
-        }
-        return result;
     }
 }
