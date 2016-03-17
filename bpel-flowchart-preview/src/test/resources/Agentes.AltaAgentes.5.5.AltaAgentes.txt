@@ -24,9 +24,9 @@ fn_callbackClient((Fin))
 init_receiveInput-->ht_RevisionYAceptacionDLF
 init_receiveInput-->ht_ValidarCodigoAgente
 init_receiveInput-->ht_RevisionYAceptacion
-ht_RevisionYAceptacionDLF-->|--|obj_Switch_1
-ht_ValidarCodigoAgente-->|--|obj_Switch_1
-ht_RevisionYAceptacion-->|--|obj_Switch_1
+ht_RevisionYAceptacionDLF-->obj_Switch_1
+ht_ValidarCodigoAgente-->obj_Switch_1
+ht_RevisionYAceptacion-->obj_Switch_1
 obj_Switch_1-->|RECHAZAR|fn_Switch_15
 obj_Switch_1-->|ACEPTAR|ws_Generar_Contrato
 ws_Generar_Contrato-->ws_DatosLDAP
@@ -44,10 +44,10 @@ obj_Notificar-->ht_DatosLiquidacion
 obj_Notificar-->ht_RecepcionNotificacionDefinitiva
 obj_Notificar-->ht_ConfirmacionSujetoMercado
 obj_Notificar-->ht_RecepcionContratoAdhesion
-ht_DatosLiquidacion-->|--|obj_AsignarSalida
-ht_RecepcionNotificacionDefinitiva-->|--|obj_AsignarSalida
-ht_ConfirmacionSujetoMercado-->|--|obj_AsignarSalida
-ht_RecepcionContratoAdhesion-->|--|obj_AsignarSalida
+ht_DatosLiquidacion-->obj_AsignarSalida
+ht_RecepcionNotificacionDefinitiva-->obj_AsignarSalida
+ht_ConfirmacionSujetoMercado-->obj_AsignarSalida
+ht_RecepcionContratoAdhesion-->obj_AsignarSalida
 obj_AsignarSalida-->|OK|fn_callbackClient
 
 classDef ht fill:#A8CB6A,stroke:#333;

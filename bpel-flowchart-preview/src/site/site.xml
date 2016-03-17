@@ -1,0 +1,29 @@
+<project name="bpel-preview">
+
+    <skin>
+        <groupId>lt.velykis.maven.skins</groupId>
+        <artifactId>reflow-maven-skin</artifactId>
+        <version>1.1.1</version>
+    </skin>
+
+    <custom>
+        <reflowSkin>
+            <theme>bootswatch-spacelab</theme>
+            <highlightJs>true</highlightJs>
+            <brand>
+                <name>SOA - Bpel Preview</name>
+            </brand>
+            <slogan>Super interesting project doing good things.</slogan>
+            <toc>sidebar</toc>
+        </reflowSkin>
+    </custom>
+
+    <body>
+        <menu ref="reports"/>
+        <menu name="Overview">
+            <item name="Overview" href="index.html" />
+            <item name="Settings" href="configuracion.html"  />
+            <item name="MermaidJS Template" href="mermaidtemplate.html"  />
+        </menu>
+    </body>
+</project>
