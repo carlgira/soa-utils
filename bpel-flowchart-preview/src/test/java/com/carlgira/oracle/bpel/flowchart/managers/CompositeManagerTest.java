@@ -18,7 +18,7 @@ public class CompositeManagerTest {
 
     public CompositeManagerTest() throws IOException {
         ClassLoader classLoader = CompositeManagerTest.class.getClassLoader();
-        Properties prop = new Properties();
+        prop = new Properties();
         prop.load(classLoader.getResource("bpel-flowchart-preview.properties").openStream());
     }
 
@@ -28,9 +28,8 @@ public class CompositeManagerTest {
         String pass = prop.getProperty("password");
         String realm = prop.getProperty("realm");
 
-        String componentName = "AltaAgentes";
-
-        CompositeDN compositeDN = new CompositeDN("Agentes/AltaAgentes!5.5");
+        CompositeDN compositeDN = new CompositeDN("default/TestSoaProject!1.0");
+        String componentName = "TestBPEL";
 
         ServerConnection serverConnection = new ServerConnection(server, user, pass, realm);
 
@@ -42,7 +41,7 @@ public class CompositeManagerTest {
 
     public static void main(String args[]) throws Exception {
         CompositeManagerTest compositeManagerTest = new CompositeManagerTest();
-        BPELInstance bpelInstance = compositeManagerTest.testCompositeManager("8320045");
+        BPELInstance bpelInstance = compositeManagerTest.testCompositeManager("8530017");
         assertNotNull(bpelInstance);
     }
 }

@@ -35,23 +35,23 @@ public class AuditTrailManagerTest {
     }
 
     public void testGetEvent(){
-        Event  event = auditTrailManager.getEvent("receive");
+        Event  event = auditTrailManager.getEvent("receiveInput");
         assertNotNull(event);
     }
 
     public void testGetEventStateCompleted(){
-        Event  event = auditTrailManager.getEvent("receive", 5);
+        Event  event = auditTrailManager.getEvent("receiveInput", 5);
         assertNotNull(event);
     }
 
     public void testGetEventError(){
-        Event  event = auditTrailManager.getEventWithError("receive");
+        Event  event = auditTrailManager.getEventWithError("receiveInput");
         assertNotNull(event);
     }
 
     public static void main(String[] args) throws Exception {
         AuditTrailManagerTest auditTrailManagerTest = new AuditTrailManagerTest();
-        auditTrailManagerTest.testAuditTrailManager("8320045");
+        auditTrailManagerTest.testAuditTrailManager("8530017");
 
         auditTrailManagerTest.testGetEvent();
         auditTrailManagerTest.testGetEventStateCompleted();

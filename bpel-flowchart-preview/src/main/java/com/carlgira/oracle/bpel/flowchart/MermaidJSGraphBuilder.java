@@ -293,7 +293,7 @@ public class MermaidJSGraphBuilder {
         String errorClass = "";
         for(Node node : this.nodesByType.get(type)){
             Node rnode = this.nodes.get(node.id);
-            if(rnode.state > 5){
+            if(rnode.state > 5 || rnode.state == 2 || rnode.state == 3 || rnode.state == 4){
                 errorClass+= rnode.type + "_" + rnode.id + ",";
             }
             else {
@@ -318,7 +318,7 @@ public class MermaidJSGraphBuilder {
             }
             else if(this.links.get(beginNode.type + "_" + beginNode.id) != null &&
                     this.links.get(beginNode.type + "_" + beginNode.id).size() == 1 &&
-                    beginNode.getActive() && hasParents(beginNode)){
+                    beginNode.getActive() && hasParents(beginNode) && !isNodeInErrorState(beginNode)){
                 this.restOfFile.add(this.linkStyle.replace("linkStyle 0", "linkStyle " + i));
             }
         }
@@ -341,6 +341,15 @@ public class MermaidJSGraphBuilder {
                 }
             }
         return false;
+    }
+
+    /**
+     * Check if a node is in error state
+     * @param node
+     * @return
+     */
+    private boolean isNodeInErrorState(Node node){
+        return node.state > 5 || node.state == 2 || node.state == 3  || node.state == 4;
     }
 
     /**

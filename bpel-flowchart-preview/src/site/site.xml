@@ -22,8 +22,8 @@
         <menu ref="reports"/>
         <menu name="Overview">
             <item name="Overview" href="index.html" />
-            <item name="Settings" href="configuracion.html"  />
-            <item name="MermaidJS Template" href="mermaidtemplate.html"  />
+            <item name="Settings" href="settings.html"  />
+            <item name="MermaidJS Template" href="mermaid.html"  />
         </menu>
     </body>
 </project>

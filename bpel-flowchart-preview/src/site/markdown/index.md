@@ -16,7 +16,7 @@ Aplicación java que se encarga de realizar peticiones al motor de SOA utilizand
 
 El siguiente es un grafo de ejemplo de un proceso de alta de agentes. Se puede identificar, las tareas de inicio o fin, tareas humanas con sus “outcomes” (nodos en verde), condicional (rombo gris) y llamadas a servicios (nodo azul)
 
-![Alta Agentes](/images/graph.png)
+![TestBPEL](/images/graph.png)
 
 
 ### MermaidJS

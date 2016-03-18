@@ -25,14 +25,13 @@ public class HumanTaskManagerTest {
         prop.load(classLoader.getResource("bpel-flowchart-preview.properties").openStream());
     }
 
-    public List<Task> testHumanTaskManager() throws WorkflowException {
+    public List<Task> testHumanTaskManager(String compositeId) throws WorkflowException {
         String server = prop.getProperty("server");
         String user = prop.getProperty("user");
         String pass = prop.getProperty("password");
         String realm = prop.getProperty("realm");
 
         ServerConnection serverConnection = new ServerConnection(server,user,pass, realm);
-        String compositeId = "1820046";
 
         HumanTaskManager humanTaskManager = new HumanTaskManager(serverConnection);
         humanTaskManager.init();
@@ -49,7 +48,7 @@ public class HumanTaskManagerTest {
     public static void main(String args[]) throws WorkflowException, IOException {
 
         HumanTaskManagerTest humanTaskManagerTest = new HumanTaskManagerTest();
-        List<Task> tasks = humanTaskManagerTest.testHumanTaskManager();
+        List<Task> tasks = humanTaskManagerTest.testHumanTaskManager("2030017");
 
         for(Task task: tasks){
             System.out.println(task.getTaskDefinitionId() + " " + task.getSystemAttributes().getOutcome()

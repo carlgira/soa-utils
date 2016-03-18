@@ -42,12 +42,16 @@ public class AuditTrailManager {
      */
     public Event getEventWithError(String label){
         for(Event eventType : this.auditTrail.getEvent()){
-            if( (eventType.getLabel()  != null  && eventType.getState() != null)  &&
-                    (label.equals(eventType.getLabel()) || eventType.getLabel().startsWith(label + " ")) &&
-                    Integer.parseInt(eventType.getState()) > 5 // Any number greater than 5 is an error state
-                    ) {
-                return eventType;
+            if(eventType.getState() != null){
+                int state = Integer.parseInt(eventType.getState());
+                if(eventType.getLabel()  != null &&
+                        (label.equals(eventType.getLabel()) || eventType.getLabel().startsWith(label + " ")) &&
+                        (state > 5 || state == 2 || state == 3  || state == 4)
+                        ) {
+                    return eventType;
+                }
             }
+
         }
         return null;
     }
