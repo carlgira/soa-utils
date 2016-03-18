@@ -1,76 +1,73 @@
-Creaci&oacute;n de template Mermaid.js
-==============================
+Build a Graph template 
+======================
+
+The construction of the template must follow the next rules so the parser can read the template.
  
-Para asegurar una clasificación correcta se ha definido unas reglas adicionales en la creación de los grafos de mermaid.js
- 
-El fichero se debe estructurar en 4 partes:
+The file must be structured in the next 4 parts
 
-1.	Definición de nodos
-2.	Creación de enlaces
-3.	Configuración de estilos de nodos
-4.	Configuración de estilos de enlaces
+1.	Node Definition
+2.	Link Creation
+3.	Node Style
+4.	Link Style
 
-Definici&oacute;n de Nodos
--------------------
+Node Definition
+---------------
 
-Lo primero que se hace es definir todos sus nodos. Cada nodo tiene 4 propiedades; un tipo, un identificador de nodo, una forma geométrica y un mensaje.
+The first thing to do is to define all the nodes of the graph. Each node has 4 properties; a type, an node id, a shape and a message.
 
-- Se definen 6 tipos de nodos. \'ht\' (human task), \'ws\' (web service), \'bpel\' (proceso bpel), \'init\' (actividad de inicio), \'fn\' (actividad de fin), \'obj\' (cualquier otra actividad tipo condicional, flujo paralelo, o para notas informativas). Todos los identificadores de nodos deben comenzar su identificador con alguno de estos tipos.
-- Los identificadores de nodo son una copia del nombre de la actividad en el proceso BPEL. Es de esta forma que se puede realizar una relación entre el grafo y el BPEL. 
-- Hay varias formas geométricas que se definen utilizando caracteres diferentes en mermaid.js. Se pueden definir, círculos, rectángulos, rombos, rectángulos redondeados, y objetos tipo notas informativas.
-- El mensaje es el label que se mostrará en el grafo. (En vez de mostrar el identificador del nodo)
+- There are 6 node **types**.  \'ht\' (human task), \'ws\' (web service), \'bpel\' (bpel process), \'init\' (init activity), \'fn\' (end activity), \'obj\' (any other object a conditional, flow object, or informative notes). Every node id must begin with his type.
+- The **node id** \"have\" to be a exact copy of the activity name in the bpel process. This is the way that the app is able to relates the graph nodes and the activities inside of the bpel.
+- There are several shapes in mermaisJS, each one using a combination of characters. It can be used circles,  rects, round rects, diamonds and informative nodes.
+- The label is the message that is going to appear in the graph.
 
-La definición de un nodo se hace de la siguiente forma:
+<b><font color="red">init</font>_<font color="green">receiveInput</font>((<font color="blue">Begin</font>))</b>
 
-
-<b><font color="red">bpel</font>_<font color="green">Receive_CrearTarjeta</font>[<font color="blue">Crear Tarjeta</font>]</b>
-
--	<font color="red">bpel</font> : Tipo de objeto.
--	<font color="green">Receive_CrearTarjeta</font> : Identificador asociado al proceso BPEL
--	<font color="blue">Crear Tarjeta</font> : Label que aparecerá en el grafo
--	\[  \] (los corchetes): Representan la forma del nodo, en este caso un cuadrado.
+-	<font color="red">init</font> : Type of object
+-	<font color="green">receiveInput</font> : Id of the activity in the bpel process
+-	<font color="blue">Crear Tarjeta</font> : Label that is going to appear in the graph
+-	**((  ))** (the double parenthesis): The shape of the node, in this case a circle
 
 
 <br/>
 
 <table>
     <tr>
-        <td>Identificador de Nodo</td>
-        <td>Descripción</td>
-        <td>Imagen</td>
+        <td>Node Id</td>
+        <td>Description</td>
+        <td>Image</td>
     </tr>
     <tr>
-        <td>init_receiveInput((Alta Agente))</td>
+        <td>init_receiveInput((Begin))</td>
         <td>
             <ul>
-                <li>Tipo: Nodo de inicio</li>
+                <li>Type: Init node</li>
                 <li>Id: receiveInput</li>
-                <li>Label: Alta Agente</li>
-                <li>Forma: Circulo (dobles paréntesis)</li>
+                <li>Label: Begin</li>
+                <li>Shape: Circle (double parenthesis)</li>
             </ul>
         </td>
         <td><img src="/images/init_node.png"/></td>
     </tr>
     <tr>
-        <td>ht_ValidacionDLF(Validacion DLF)</td>
+        <td>ht_receiveCompletedTask_Validate(Validate Task)</td>
         <td>
             <ul>
-                <li>Tipo: Nodo tarea humana</li>
-                <li>Id: ValidacionDLF</li>
-                <li>Label: Validación DLF</li>
-                <li>Forma: Rectángulo redondeado  (paréntesis)</li>
+                <li>Type: Human task node</li>
+                <li>Id: receiveCompletedTask_Validate</li>
+                <li>Label: Validate Task</li>
+                <li>Shape: Round rect  (parenthesis)</li>
              </ul>
         </td>
         <td><img src="/images/ht_node.png"/></td>
     </tr>
     <tr>
-        <td>obj_SwitchContinuar{Continuar?}</td>
+        <td>obj_TaskSwitch{"Validate?"}</td>
         <td>
             <ul>
-                <li>Tipo: Nodo de objeto</li>
-                <li>Id: SwitchContinuar</li>
-                <li>Label: Continuar?</li>
-                <li>Forma: Rombo (Llaves)</li>
+                <li>Type: Object node</li>
+                <li>Id: TaskSwitch</li>
+                <li>Label: Validate?</li>
+                <li>Shape: Diamond (Llaves)</li>
              </ul>
         </td>
         <td><img src="/images/cond_node.png"/></td>
@@ -79,10 +76,10 @@ La definición de un nodo se hace de la siguiente forma:
         <td>ws_GenerarContrato[Generar Contrato]</td>
         <td>
             <ul>
-                <li>Tipo: Nodo de web Service</li>
+                <li>Type: Nodo de web Service</li>
                 <li>Id: GenerararContrato</li>
                 <li>Label: Generar Contrato</li>
-                <li>Forma: Rectángulo (corchetes)</li>
+                <li>Shape: Rectángulo (corchetes)</li>
              </ul>
         </td>
         <td><img src="/images/ws_node.png"/></td>
@@ -91,10 +88,10 @@ La definición de un nodo se hace de la siguiente forma:
         <td>bpel_InvokeCrearTarjeta[Crear Tarjeta]</td>
         <td>
             <ul>
-                <li>Tipo: Nodo de BPEL</li>
+                <li>Type: Nodo de BPEL</li>
                 <li>Id: InvokeCrearTarjeta</li>
                 <li>Label: Crear tarjeta</li>
-                <li>Forma: Rectángulo (corchetes)</li>
+                <li>Shape: Rectángulo (corchetes)</li>
              </ul>
         </td>
         <td><img src="/images/bpel_node.png"/></td>
@@ -103,10 +100,10 @@ La definición de un nodo se hace de la siguiente forma:
         <td>obj_TarjetaTerminada>Tarjeta terminada]</td>
         <td>
             <ul>
-                <li>Tipo: Nodo de objeto</li>
+                <li>Type: Nodo de objeto</li>
                 <li>Id: TarjetaTerminada</li>
                 <li>Label: Tarjeta terminada</li>
-                <li>Forma: Nota (mayor que y corchete)</li>
+                <li>Shape: Nota (mayor que y corchete)</li>
              </ul>
         </td>
         <td><img src="/images/info_node.png"/></td>
@@ -115,18 +112,18 @@ La definición de un nodo se hace de la siguiente forma:
         <td>fn_callbackClient((Fin))</td>
         <td>
             <ul>
-                <li>Tipo: Nodo de fin</li>
+                <li>Type: Nodo de fin</li>
                 <li>Id: callbackClient</li>
                 <li>Label: Fin</li>
-                <li>Forma: Circulo (dobles paréntesis)</li>
+                <li>Shape: Circulo (dobles paréntesis)</li>
              </ul>
         </td>
         <td><img src="/images/fn_node.png"/></td>
     </tr>
 </table>
 
-Creaci&oacute;n de enlaces
--------------------
+Link Creation
+-------------
 
 La creación de enlaces se puede hacer de dos formas; enlaces simples y enlaces con mensaje.
 
@@ -154,8 +151,8 @@ Ejemplo:
     </tr>
 </table>
 <br/>
-Configuraci&oacute;n de estilos de nodos
----------------------------------
+Node Style
+----------
 Aunque se puede modificar, se recomienda simplemente que se copie la sección de estilos desde la plantilla de ejemplo que está en la aplicación.
 
     classDef ht fill:#A8CB6A,stroke:#333;
@@ -165,8 +162,8 @@ Aunque se puede modificar, se recomienda simplemente que se copie la sección de
     classDef htError fill:#A8CB6A,stroke:#FF0000,stroke-width:3px;
     classDef wsError fill:#6EABD0,stroke:#FF0000,stroke-width:3px;
 
-Configuración de estilos de enlaces
------------------------------------
+Link Style
+----------
 La última línea del fichero debe ser la del estilo de los enlaces. Se debe copiar esta línea desde la plantilla de ejemplo que está en la aplicación.
 
     linkStyle 0 stroke-width:2px,fill:none,stroke:green,stroke-dasharray: 5, 5;
