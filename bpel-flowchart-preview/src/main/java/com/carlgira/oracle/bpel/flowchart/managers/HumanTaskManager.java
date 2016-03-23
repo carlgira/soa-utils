@@ -101,6 +101,34 @@ public class HumanTaskManager {
     }
 
     /**
+     * Set the task outcome for a List of task
+     * @param tasksId A taskId string List
+     * @param outcome
+     * @throws WorkflowException
+     * @throws StaleObjectException
+     */
+    public void setTasksOutcome(List<String> tasksId, String outcome) throws Exception {
+
+        if (this.wfsvcClient != null) {
+                ITaskService taskSvc = this.wfsvcClient.getTaskService();
+
+            if (outcome.equals("REQUEST_INFORMATION")) {
+                throw new Exception("REQUEST_INFORMATION not supported for list of task");
+            } else if (outcome.equals("ESCALATE")) {
+                taskSvc.escalateTasks(this.ctx, tasksId);
+            } else if (outcome.equals("WITHDRAW")) {
+                taskSvc.withdrawTasks(this.ctx, tasksId);
+            } else if (outcome.equals("SUSPEND")) {
+                taskSvc.suspendTasks(this.ctx, tasksId);
+            } else if (outcome.equals("RESUME")) {
+                taskSvc.resumeTasks(this.ctx, tasksId);
+            } else {
+                taskSvc.updateOutcomeOfTasks(this.ctx, tasksId, outcome);
+            }
+        }
+    }
+
+    /**
      * Calls to getTasklist(List<HtQuery> htQuery)
      * @param htQuery
      * @return
