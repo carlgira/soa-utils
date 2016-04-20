@@ -35,7 +35,7 @@ public class MermaidJSGraphTest {
 
         ServerConnection serverConnection = new ServerConnection(server,user,pass, realm);
 
-        File file = new File(classLoader.getResource(compositeDN.getDomainName()+ "." + compositeDN.getCompositeName() + "." + compositeDN.getRevision() + "." + bpel  + ".txt").getFile());
+        File file = new File(classLoader.getResource(compositeDN.getDomainName()+ "." + compositeDN.getCompositeName() + ".last." + bpel  + ".txt").getFile());
 
         MermaidJSGraphBuilder bpelFlowChartController = new MermaidJSGraphBuilder(serverConnection, file.getAbsolutePath());
         bpelFlowChartController.buildNodes(compositeDN, bpel, bpelid);
@@ -68,15 +68,25 @@ public class MermaidJSGraphTest {
     }
 
     public static void main(String args[]) throws Exception {
-        CompositeDN compositeDN = new CompositeDN("default/TestSoaProject!1.0");
-        String bpel = "TestBPEL";
-        String bpelid = "8530017";
+
+        //DOC.AltaUnidadesOfertantes.last.AltaUnidadesOfertantes
+
+        CompositeDN compositeDN = new CompositeDN("DOC/AltaUnidadesOfertantes!5.4");
+        String bpel = "AltaUnidadesOfertantes";
+        String bpelid = "9500114";
 
         MermaidJSGraphTest bpelFlowChartPreviewTest = new MermaidJSGraphTest();
 
         String graph = bpelFlowChartPreviewTest.testMermaidGraph(compositeDN, bpel, bpelid);
         System.out.println(graph);
         assertNotNull(graph);
+
+
+
+
+
+
+
 
         //String graphImg = bpelFlowChartPreviewTest.testMermaidGraphImg(bpelid,graph );
        // assertNotNull(graphImg);

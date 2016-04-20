@@ -11,6 +11,7 @@ public class Link {
     public String beginNode;
     public String endNode;
     public String message;
+    public String subGraph;
 
     private static Pattern patternLink1 = Pattern.compile("(.*)-->\\|(.*)\\|(.*)");
     private static Pattern patternLink2 = Pattern.compile("(.*)-->(.*)");

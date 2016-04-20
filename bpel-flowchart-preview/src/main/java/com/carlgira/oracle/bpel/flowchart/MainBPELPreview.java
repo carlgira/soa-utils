@@ -47,7 +47,11 @@ public class MainBPELPreview {
         File file = new File(graph_dir + "/" + templateGraphFile  + ".txt");
 
         if (!file.exists()) {
-            throw new Exception("No config files for input, " + templateGraphFile);
+            templateGraphFile = partition + "." + composite + ".last." + bpel;
+            file = new File(graph_dir + "/" + templateGraphFile  + ".txt");
+            if(!file.exists()){
+                throw new Exception("No config files for input");
+            }
         }
 
         bpelFlowChartController = new MermaidJSGraphBuilder(serverConnection, file.getAbsolutePath());

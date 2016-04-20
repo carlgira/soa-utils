@@ -1,5 +1,7 @@
 package com.carlgira.oracle.bpel.flowchart.mermaid;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +17,7 @@ public class Node {
     private Boolean active = false;
     public Boolean initiated = false;
     public Integer state = 1;
+    public Date createdDate;
 
     private static Pattern patternRoundedNode = Pattern.compile("(^[obj_|ht_|bpel_|ws_|init_|fn_]*)([^\\(\\[\\{>]+)(>|\\[|\\{|\\(|\\(\\()([^\\(\\)\\[\\]\\}]+)(]|\\]|\\}|\\)\\)|\\))");
 

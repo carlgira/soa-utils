@@ -18,10 +18,8 @@ import oracle.soa.management.facade.bpel.BPELInstance;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by carlgira on 07/03/2016.
@@ -123,21 +121,40 @@ public class MermaidJSGraphBuilder {
 
     /**
      * Check the mermaid graph against the task on the composite. If the task has been completed, the mermaid.js node graph is set to active.
-     * @param tasks
+     * @param taskList
      */
-    private void buildHTNodes(List<Task> tasks) {
+    private void buildHTNodes(List<Task> taskList) {
+
+        List<Task> tasks = new ArrayList<>();
+
+        for(int i=0;i<taskList.size();i++){
+            Task task = taskList.get(i);
+            for(int e=i+1;e<taskList.size();e++){
+                if(taskList.get(i).getSystemAttributes().getTaskDefinitionId().equals(taskList.get(e).getSystemAttributes().getTaskDefinitionId())){
+                    if(taskList.get(i).getSystemAttributes().getCreatedDate().before(taskList.get(e).getSystemAttributes().getCreatedDate())
+                            ){
+                        task = taskList.get(e);
+                    }
+                }
+            }
+            tasks.add(task);
+        }
+
         for (Node node : this.nodesByType.get(TypeOfNode.NODE_HT)) {
+            String taskId = node.id.substring(node.id.indexOf("_")+1);
             for (Task task : tasks) {
-                String taskId = node.id.substring(node.id.indexOf("_")+1);
-                if (task.getTaskDefinitionId().contains(taskId)) {
+                String taskName = task.getTaskDefinitionId();
+                taskName = taskName.substring(taskName.lastIndexOf("/")+1, taskName.length());
+                if (taskName.equals(taskId)){
                     if (task.getSystemAttributes().getOutcome() != null && !task.getSystemAttributes().getOutcome().trim().isEmpty()) {
 
                         for (int i = 0; i < this.listOfLinks.size(); i++) {
                             Link link = this.listOfLinks.get(i);
-                            if (link.beginNode.contains(node.id)) {
+                            if (link.beginNode.endsWith(node.id)) {
                                 link.message = task.getSystemAttributes().getOutcome();
                                 this.listOfLinks.set(i, link);
                                 node.setActive(true);
+                                node.createdDate = task.getSystemAttributes().getCreatedDate().getTime();
                                 this.nodes.put(node.id, node);
                             }
                         }
@@ -146,6 +163,7 @@ public class MermaidJSGraphBuilder {
                         node.initiated = true;
                         this.nodes.put(node.id, node);
                     }
+                    break;
                 }
             }
         }
@@ -183,16 +201,30 @@ public class MermaidJSGraphBuilder {
      */
     private void activateNodes(AuditTrailManager auditTrailManager, String type){
         for(Node node : this.nodesByType.get(type)){
-
-            if(auditTrailManager.getEvent(node.id,5) != null){
+            Event e = null;
+            if( (e = auditTrailManager.getLastEvent(node.id,5)) != null){
                 node.setActive(true);
+                node.createdDate = parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
-            else if(auditTrailManager.getEvent(node.id) != null){
+            else if( (e = auditTrailManager.getLastEvent(node.id)) != null){
                 node.initiated = true;
+                node.createdDate = parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
         }
+    }
+
+    private Date parseDate(String dateString){
+        Date result = null;
+        try{
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+            result = dt.parse(dateString.substring(0,19));
+        }
+        catch (Exception e){
+            return null;
+        }
+        return  result;
     }
 
     /**
@@ -201,21 +233,22 @@ public class MermaidJSGraphBuilder {
      */
     private void buildWSNodes(AuditTrailManager auditTrailManager){
         for(Node node : this.nodesByType.get(TypeOfNode.NODE_WS)){
-            if(auditTrailManager.getEvent(node.id, 1) != null){
+            Event e = null;
+            if( (e = auditTrailManager.getLastEvent(node.id, 1)) != null){
                 node.initiated = true;
+                node.createdDate = parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
-            if(auditTrailManager.getEvent(node.id, 5) != null){
+            if((e = auditTrailManager.getLastEvent(node.id, 5)) != null){
                 node.setActive(true);
+                node.createdDate = parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
-            else {
-                Event e = auditTrailManager.getEventWithError(node.id);
-                if(e != null){
-                    node.setActive(true);
-                    node.state = Integer.parseInt(e.getState());
-                    this.nodes.put(node.id, node);
-                }
+            else if( (e = auditTrailManager.getLastEventWithError(node.id)) != null){
+                node.setActive(true);
+                node.createdDate = parseDate(e.getDate());
+                node.state = Integer.parseInt(e.getState());
+                this.nodes.put(node.id, node);
             }
         }
     }
@@ -226,21 +259,22 @@ public class MermaidJSGraphBuilder {
      */
     private void buildBPELNodes(AuditTrailManager auditTrailManager){
         for(Node node : this.nodesByType.get(TypeOfNode.NODE_BPEL)){
-            if(auditTrailManager.getEvent(node.id, 1) != null){
+            Event e = null;
+            if((e = auditTrailManager.getLastEvent(node.id, 1)) != null){
                 node.initiated = true;
+                node.createdDate = parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
-            if(auditTrailManager.getEvent(node.id, 5) != null){
+            if((e = auditTrailManager.getLastEvent(node.id, 5)) != null){
                 node.setActive(true);
+                node.createdDate = parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
-            else {
-                Event e = auditTrailManager.getEventWithError(node.id);
-                if(e != null){
-                    node.setActive(true);
-                    node.state = Integer.parseInt(e.getState());
-                    this.nodes.put(node.id, node);
-                }
+            else if( (e = auditTrailManager.getLastEventWithError(node.id)) != null) {
+                node.setActive(true);
+                node.state = Integer.parseInt(e.getState());
+                node.createdDate = parseDate(e.getDate());
+                this.nodes.put(node.id, node);
             }
         }
     }
@@ -309,6 +343,11 @@ public class MermaidJSGraphBuilder {
      * This functions adds styles to all links between active nodes.
      */
     public void drawLinks(){
+
+        for(Node node : this.nodes.values()){
+            System.out.println(node.id + " " + node.createdDate +  " " + node.getActive() + " " + node.initiated );
+        }
+
         for(int i= 0;i < this.listOfLinks.size();i++){
             Link link = this.listOfLinks.get(i);
             Node beginNode = this.nodes.get(link.beginNode.substring(link.beginNode.indexOf("_") +1));
@@ -337,6 +376,10 @@ public class MermaidJSGraphBuilder {
             for(Link link : this.listOfLinks){
                 Node parentNode = this.nodes.get(link.beginNode.substring(link.beginNode.indexOf("_")+1));
                 if(link.endNode.equals(node.type + "_" + node.id) && (parentNode.getActive() || parentNode.initiated)){
+                    if(node.createdDate != null && parentNode.createdDate != null){
+                        System.out.println(node.id + " " + parentNode.id + " " + node.createdDate.compareTo(parentNode.createdDate));
+                        return node.createdDate.compareTo(parentNode.createdDate) >= 0;
+                    }
                     return true;
                 }
             }
@@ -366,6 +409,9 @@ public class MermaidJSGraphBuilder {
         response+= "\n";
 
         for(Link link : this.listOfLinks){
+            if(link.subGraph != null){
+                response += link.subGraph  + "\n";
+            }
             if(link.message == null){
                 response += link.beginNode + "-->" + link.endNode + "\n";
             }
@@ -407,9 +453,24 @@ public class MermaidJSGraphBuilder {
             index++;
         }
         index++;
+        String subgraph = "";
         while (!flowChart.get(index).isEmpty()) {
             String line = flowChart.get(index);
+            if(line.contains("subgraph ")){
+                subgraph = line;
+                index++;
+                line = flowChart.get(index);
+            }
+            if(line.equals("end")){
+                subgraph = line;
+                index++;
+                line = flowChart.get(index);
+            }
             Link link = Link.parseLink(line);
+            if(subgraph != null){
+                link.subGraph = subgraph;
+                subgraph = null;
+            }
             this.listOfLinks.add(link);
             if (this.links.containsKey(link.beginNode)) {
                 List<Node> listNodes = this.links.get(link.beginNode);
