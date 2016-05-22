@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.carlgira</groupId>
+    <artifactId>http-token-authenticator</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <middleware.home>I:\Middleware</middleware.home>
+        <weblogic.version>11.1.1.7</weblogic.version>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <domain.dir>I:\Middleware\wlserver_10.3\server</domain.dir>
+        <generated.sources.dir>${project.build.directory}/generated-source</generated.sources.dir>
+        <jar.file>${project.build.directory}/${project.build.finalName}.jar</jar.file>
+        <mbean.xml>SimpleSampleIdentityAsserter.xml</mbean.xml>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bea.core</groupId>
+            <artifactId>commons.security.api</artifactId>
+            <version>1.1.0.0_6-2-0-0</version>
+            <scope>system</scope>
+            <systemPath>${middleware.home}/modules/com.bea.core.common.security.api_1.0.0.0_6-2-0-0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.bea.core</groupId>
+            <artifactId>weblogic.security</artifactId>
+            <version>1.1.0.0_6-2-0-0</version>
+            <scope>system</scope>
+            <systemPath>${middleware.home}/modules/com.bea.core.weblogic.security_1.0.0.0_6-2-0-0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>weblogic</artifactId>
+            <version>${weblogic.version}</version>
+            <scope>system</scope>
+            <systemPath>${middleware.home}/wlserver_10.3/server/lib/weblogic.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>javax.servlet</artifactId>
+            <version>${weblogic.version}</version>
+            <scope>system</scope>
+            <systemPath>${middleware.home}/modules/javax.servlet_1.0.0.0_2-5.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>oracle.jps</artifactId>
+            <version>${weblogic.version}</version>
+            <scope>system</scope>
+            <systemPath>${middleware.home}/oracle_common/modules/oracle.jps_11.1.1/jps-wls-idmAuthnProvider.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>com.bea.core.mbean.support</artifactId>
+            <version>${weblogic.version}</version>
+            <scope>system</scope>
+            <systemPath>${middleware.home}/modules/com.bea.core.mbean.support_1.5.0.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>com.bea.core.descriptor</artifactId>
+            <version>${weblogic.version}</version>
+            <scope>system</scope>
+            <systemPath>${middleware.home}/modules/com.bea.core.descriptor_1.10.0.0.jar</systemPath>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-install</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${project.build.directory}
+                                    </directory>
+                                    <includes>
+                                        <include>
+                                            ${project.build.finalName}.jar
+                                        </include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <id>default-install</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generated.sources.dir}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.3</version>
+            <dependencies>
+                <dependency>
+                    <groupId>weblogic</groupId>
+                    <artifactId>weblogic</artifactId>
+                    <version>${weblogic.version}</version>
+                    <scope>system</scope>
+                    <systemPath>
+                        ${middleware.home}/wlserver_10.3/server/lib/weblogic.jar
+                    </systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools</artifactId>
+                    <version>1.6.0</version>
+                    <scope>system</scope>
+                    <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
+                </dependency>
+            </dependencies>
+            <executions>
+            <execution>
+                <id>generate-mbean</id>
+                <phase>process-resources</phase>
+                <goals>
+                    <goal>run</goal>
+                </goals>
+                <configuration>
+                    <tasks>
+                        <java fork="true" classname="weblogic.management.commo.WebLogicMBeanMaker" classpathref="maven.plugin.classpath">
+                            <jvmarg
+                                    value="-DMDF=${basedir}/src/main/resources/${mbean.xml}" />
+                            <jvmarg
+                                    value="-Dfiles=${project.build.outputDirectory}" />
+                            <jvmarg value="-DcreateStubs=true" />
+                            <jvmarg value="-Dverbose=true" />
+                        </java>
+                    </tasks>
+                </configuration>
+            </execution>
+            <execution>
+                <id>generate-jar</id>
+                <phase>compile</phase>
+                <goals>
+                    <goal>run</goal>
+                </goals>
+                <configuration>
+                    <tasks>
+                        <java fork="true"
+                              classname="weblogic.management.commo.WebLogicMBeanMaker"
+                              classpathref="maven.plugin.classpath">
+                            <jvmarg value="-DMJF=${jar.file}" />
+                            <jvmarg value="-Dfiles=${project.build.outputDirectory}" />
+                            <jvmarg value="-DcreateStubs=true" />
+                            <jvmarg value="-DpreserveStubs=true" />
+                            <jvmarg value="-Dverbose=true" />
+                            <arg value="-preserveStubs" />
+                        </java>
+                        <move
+                                todir="${generated.sources.dir}"
+                                file="${project.build.outputDirectory}/com" />
+                        <move todir="${generated.sources.dir}">
+                            <fileset
+                                    dir="${project.build.outputDirectory}">
+                                <include name="**/*.java" />
+                            </fileset>
+                        </move>
+                    </tasks>
+                </configuration>
+            </execution>
+            </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

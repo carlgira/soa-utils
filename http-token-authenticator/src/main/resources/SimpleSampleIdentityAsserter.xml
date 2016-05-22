@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<!DOCTYPE MBeanType SYSTEM "commo.dtd">
+
+<MBeanType
+        Name          = "SimpleSampleIdentityAsserter"
+        DisplayName   = "SimpleSampleIdentityAsserter"
+        Package       = "com.carlgira.asserter"
+        Extends       = "weblogic.management.security.authentication.IdentityAsserter"
+        Implements    = "weblogic.management.security.authentication.Authenticator"
+        PersistPolicy = "OnUpdate"
+>
+
+    <MBeanAttribute
+            Name          = "ProviderClassName"
+            Type          = "java.lang.String"
+            Writeable     = "false"
+            Preprocessor = "weblogic.management.configuration.LegalHelper.checkClassName(value)"
+            Default       = "&quot;com.carlgira.asserter.SimpleSampleIdentityAsserterProviderImpl&quot;"
+    />
+
+    <MBeanAttribute
+            Name          = "Description"
+            Type          = "java.lang.String"
+            Writeable     = "false"
+            Default       = "&quot;WebLogic Simple Sample Identity Asserter Provider&quot;"
+    />
+
+    <MBeanAttribute
+            Name          = "Version"
+            Type          = "java.lang.String"
+            Writeable     = "false"
+            Default       = "&quot;1.0&quot;"
+    />
+
+    <MBeanAttribute
+            Name      = "SupportedTypes"
+            Type      = "java.lang.String[]"
+            Writeable     = "false"
+            Default   = "new String[] { &quot;SamplePerimeterAtnToken&quot; }"
+    />
+
+    <MBeanAttribute
+            Name      = "ActiveTypes"
+            Type      = "java.lang.String[]"
+            Default   = "new String[] { &quot;SamplePerimeterAtnToken&quot; }"
+    />
+
+    <MBeanAttribute
+            Name      = "Base64DecodingRequired"
+            Type      = "boolean"
+            Writeable     = "true"
+            Default   = "false"
+    />
+
+</MBeanType>
