@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.carlgira</groupId>
+    <artifactId>bpel-flowchart-preview</artifactId>
+    <version>1.0</version>
+    <packaging>war</packaging>
+
+
+    <properties>
+        <!-- <mdw.home>/home/carlgira/Oracle/Middleware</mdw.home> -->
+        <mdw.home>I:\Middleware</mdw.home>
+        <java.version>1.7</java.version>
+        <spring.version>4.2.5.RELEASE</spring.version>
+        <jstl.version>1.2</jstl.version>
+        <servletapi.version>2.5</servletapi.version>
+    </properties>
+
+    <!--
+    You need to install these libs because system scope dependencies are not included inside the war.
+    All the other system scope dependencies are to test the code outside the weblogic.
+    mvn install:install-file -Dfile=I:/Middleware/Oracle_SOA1/soa/modules/oracle.soa.workflow_11.1.1/bpm-services.jar -DgroupId=com.oracle -DartifactId=bpm-services -Dversion=11.1.1 -Dpackaging=jar
+    mvn install:install-file -Dfile=I:/Middleware/oracle_common/soa/modules/oracle.soa.mgmt_11.1.1/soa-infra-mgmt.jar -DgroupId=com.oracle -DartifactId=soa-infra-mgmt -Dversion=11.1.1 -Dpackaging=jar
+    mvn install:install-file -Dfile=I:/Middleware/Oracle_SOA1/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar -DgroupId=com.oracle -DartifactId=soa.fabric -Dversion=11.1.1 -Dpackaging=jar
+-->
+
+    <dependencies>
+        <!-- Compiling Dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>${servletapi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>bpm-services</artifactId>
+            <version>11.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>soa-infra-mgmt</artifactId>
+            <version>11.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>soa.fabric</artifactId>
+            <version>11.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+
+        <!-- Testing Dependencies -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>wsclient_extended</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/webservices/wsclient_extended.jar</systemPath>
+        </dependency>
+         <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>wsclient-rt</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/oracle.webservices_11.1.1/wsclient-rt.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>oamcfgtool</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/oracle.oamprovider_11.1.1/oamcfgtool.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>wsclient_extended</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/webservices/wsclient_extended.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>security.jacc</artifactId>
+            <version>1.0.0.0_1-1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/modules/javax.security.jacc_1.0.0.0_1-1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>adf-share-support</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/oracle.adf.share_11.1.1/adf-share-support.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>webservices.standalone</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/oracle.webservices_11.1.1/oracle.webservices.standalone.client.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>wlthint3client</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/wlthint3client.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>weblogic</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/wlserver_10.3/server/lib/weblogic.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>wsclient_extended</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/webservices/wsclient_extended.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>soa.fabric</artifactId>
+            <version>11.1.1</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/Oracle_SOA1/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+                <dependencies>
+                        <dependency>
+                            <groupId>lt.velykis.maven.skins</groupId>
+                            <artifactId>reflow-velocity-tools</artifactId>
+                            <version>1.1.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.velocity</groupId>
+                            <artifactId>velocity</artifactId>
+                            <version>1.7</version>
+                        </dependency>
+                </dependencies>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>javadoc</goal>
+                            <goal>test-javadoc</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+        </plugins>
+    </build>
+<!--
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <reportSets>
+                    <reportSet>
+                        <id>default</id>
+                        <reports>
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+-->
+
+</project>

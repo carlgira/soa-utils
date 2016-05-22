@@ -3,12 +3,11 @@ package com.carlgira.oracle.bpel.test.model.testcase;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by carlgira on 3/1/16.
- */
 public class TestCase {
     public String name;
+    public String wsdl;
     public String description = "TestCase description";
+    public Long timeout = 180000L;
     public List<HumanTask> humanTaskList = new ArrayList<HumanTask>();
 
     public TestCase(){

@@ -10,7 +10,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Class of file utilities to the SoapUIProjectGenerator
- * @author Carlos Giraldo. carlgira@gmail.com 
  */
 public class SoapUIFileUtility
 {

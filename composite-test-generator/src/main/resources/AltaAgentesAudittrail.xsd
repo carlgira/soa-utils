@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns="http://schemas.oracle.com/bpel/audit-trail/" targetNamespace="http://schemas.oracle.com/bpel/audit-trail/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="audit-trail">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="event" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+
+  <xs:element name="event">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element type="xs:string" name="message"/>
+      <xs:element type="xs:string" name="details" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="sid" use="optional"/>
+    <xs:attribute type="xs:string" name="cat" use="optional"/>
+    <xs:attribute type="xs:string" name="n" use="optional"/>
+    <xs:attribute type="xs:string" name="date" use="optional"/>
+    <xs:attribute type="xs:string" name="type" use="optional"/>
+    <xs:attribute type="xs:string" name="label" use="optional"/>
+    <xs:attribute type="xs:string" name="psid" use="optional"/>
+    <xs:attribute type="xs:string" name="wikey" use="optional"/>
+    <xs:attribute type="xs:string" name="state" use="optional"/>
+    <xs:attribute type="xs:string" name="to" use="optional"/>
+    <xs:attribute type="xs:string" name="patternName" use="optional"/>
+    <xs:attribute type="xs:string" name="partnerWSDL" use="optional"/>
+  </xs:complexType>
+  </xs:element>
+</xs:schema>

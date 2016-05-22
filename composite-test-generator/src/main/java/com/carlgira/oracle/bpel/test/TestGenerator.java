@@ -1,11 +1,9 @@
 package com.carlgira.oracle.bpel.test;
 
 import com.carlgira.oracle.bpel.test.model.composite.*;
+import com.carlgira.oracle.bpel.test.model.composite.Component;
 import com.carlgira.oracle.bpel.test.model.task.TaskDefinition;
-import com.carlgira.oracle.bpel.test.model.testcase.HumanTask;
-import com.carlgira.oracle.bpel.test.model.testcase.ServiceCall;
-import com.carlgira.oracle.bpel.test.model.testcase.TestCase;
-import com.carlgira.oracle.bpel.test.model.testcase.TestSuite;
+import com.carlgira.oracle.bpel.test.model.testcase.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.xml.bind.JAXBContext;
@@ -59,18 +57,22 @@ public class TestGenerator {
 
         for(Service service : composite.getService()){
             TestCase testCase = new TestCase( service.getName() + "_case00");
+            testCase.wsdl = service.getWsdlLocation();
 
+            CompositeComponent compositeComponent = null;
             for(Component parentComponent : composite.getComponent()) {
 
                 if (!existsWire(service.getName(), parentComponent.getName() + "/")) {
                     continue;
                 }
+                compositeComponent = new CompositeComponent(parentComponent);
 
                 for (Component component : composite.getComponent()) {
 
                     if (!existsWire(parentComponent.getName(), component.getName())) {
                         continue;
                     }
+
 
                     if (component.getImplementationWorkflow() != null) {
                         String taskPath = projectDir + "/" + component.getImplementationWorkflow().getSrc();
@@ -86,9 +88,11 @@ public class TestGenerator {
                         testCase.humanTaskList.add(humanTask);
                     }
                 }
+                compositeComponent.testCaseList.add(testCase);
             }
-            testSuite.testCaseList.add(testCase);
-
+            if(compositeComponent != null){
+                testSuite.compositeComponents.add(compositeComponent);
+            }
         }
 
         for(Reference reference : composite.getReference()){
@@ -108,6 +112,8 @@ public class TestGenerator {
         }
         return false;
     }
+
+
 
 
     public void marshall(Object object, OutputStream outputStream){
