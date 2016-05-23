@@ -36,13 +36,13 @@
             Name      = "SupportedTypes"
             Type      = "java.lang.String[]"
             Writeable     = "false"
-            Default   = "new String[] { &quot;SamplePerimeterAtnToken&quot; }"
+            Default   = "new String[] { &quot;PerimeterAtnToken&quot; }"
     />
 
     <MBeanAttribute
             Name      = "ActiveTypes"
             Type      = "java.lang.String[]"
-            Default   = "new String[] { &quot;SamplePerimeterAtnToken&quot; }"
+            Default   = "new String[] { &quot;PerimeterAtnToken&quot; }"
     />
 
     <MBeanAttribute

@@ -1,8 +1,5 @@
 package com.carlgira.asserter;
 
-/**
- * Created by emateo on 19/05/2016.
- */
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
@@ -288,7 +285,7 @@ final public class SimpleSampleLoginModuleImpl implements LoginModule
         // of group1 and group1 is a member of group2, then it returns group1 and
         // group2).  Iterate over the groups, adding each to the list of principals
         // to add to the subject.
-        String groupName = "SamplePerimeterAtnUsers";
+        String groupName = "PerimeterAtnUsers";
         System.out.println("\tgroupName\t= " + groupName);
         principalsForSubject.add(new WLSGroupImpl(groupName));
     }

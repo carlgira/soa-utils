@@ -1,8 +1,5 @@
 package com.carlgira.asserter;
 
-/**
- * Created by emateo on 19/05/2016.
- */
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.CallbackHandler;

@@ -1,8 +1,5 @@
 package com.carlgira.asserter;
 
-/**
- * Created by emateo on 19/05/2016.
- */
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.AppConfigurationEntry;
 import weblogic.management.security.ProviderMBean;
@@ -18,7 +15,7 @@ import java.util.HashMap;
 
 public final class SimpleSampleIdentityAsserterProviderImpl implements AuthenticationProviderV2, IdentityAsserterV2
 {
-    final static private String TOKEN_TYPE   = "SamplePerimeterAtnToken";
+    final static private String TOKEN_TYPE   = "PerimeterAtnToken";
     final static private String TOKEN_PREFIX = "username=";
 
     private AppConfigurationEntry.LoginModuleControlFlag controlFlag;
