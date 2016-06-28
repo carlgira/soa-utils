@@ -61,7 +61,8 @@ public class TestCase
             if (include != null) {
                 this.mParent = new TestCase(compositeName, suiteName, include, true, factory);
             }
-            this.groovyProcessor = new GroovyProcessor(testName);
+
+            this.groovyProcessor = new GroovyProcessor(compositeName + "/" + suiteName + "/" + testName.substring(0, testName.length()-4));
         }
         catch (Exception xe)
         {
@@ -153,7 +154,6 @@ public class TestCase
             populatePayload(msg, daoFactory, payload);
             NormalizedMessage nMsg = new NormalizedMessageImpl();
             nMsg.setPayload(payload);
-
             return nMsg;
         }
         catch (Throwable t)
