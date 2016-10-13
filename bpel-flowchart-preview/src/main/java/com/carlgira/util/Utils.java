@@ -7,11 +7,13 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by carlgira on 08/03/2016.
  */
-public class JAXBMarshaller {
+public class Utils {
 
     public static void marshall(Object object, OutputStream outputStream){
         try {
@@ -53,5 +55,17 @@ public class JAXBMarshaller {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static Date parseDate(String dateString){
+        Date date = null;
+        try{
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            date = dt.parse(dateString.substring(0,19));
+        }
+        catch (Exception e){
+            return null;
+        }
+        return  date;
     }
 }

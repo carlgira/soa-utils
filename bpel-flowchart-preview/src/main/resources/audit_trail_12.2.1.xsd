@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="message" type="xs:string"/>
+	<xs:element name="event">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="message"/>
+				<xs:sequence minOccurs="0">
+					<xs:element ref="details"/>
+					<xs:element ref="detailsTemplate" minOccurs="0"/>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="wikey" type="xs:string"/>
+			<xs:attribute name="type" type="xs:byte" use="required"/>
+			<xs:attribute name="to" type="xs:string"/>
+			<xs:attribute name="state" type="xs:byte"/>
+			<xs:attribute name="sid" use="required" type="xs:string"/>
+			<xs:attribute name="psid" type="xs:string"/>
+			<xs:attribute name="patternName">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="bpelx:workflow"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="partnerWSDL">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value=""/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="n" type="xs:short" use="required"/>
+			<xs:attribute name="label" type="xs:string"/>
+			<xs:attribute name="date" type="xs:dateTime" use="required"/>
+			<xs:attribute name="cat" type="xs:byte" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="detailsTemplate" type="xs:string"/>
+	<xs:element name="details">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="id" type="xs:short"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="audit_trail">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="event" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="flowId" type="xs:short" use="required"/>
+			<xs:attribute name="cid" use="required" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
