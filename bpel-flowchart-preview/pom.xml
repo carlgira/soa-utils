@@ -11,29 +11,14 @@
 
 
     <properties>
-        <!-- <mdw.home>/home/carlgira/Oracle/Middleware</mdw.home> -->
-        <mdw.home>E:\Oracle\Middleware12210\Oracle_home</mdw.home>
+       
+        <mdw.home>/u01/app/oracle/fmw/12.2</mdw.home>
         <java.version>1.7</java.version>
         <spring.version>4.2.5.RELEASE</spring.version>
         <jstl.version>1.2</jstl.version>
         <servletapi.version>2.5</servletapi.version>
         <soa-version>12.2.1</soa-version>
     </properties>
-
-    <!--
-    You need to install these libs because system scope dependencies are not included inside the war.
-    All the other system scope dependencies are to test the code outside the weblogic.
-
-    SOA 11G
-    mvn install:install-file -Dfile=I:/Middleware/Oracle_SOA1/soa/modules/oracle.soa.workflow_11.1.1/bpm-services.jar -DgroupId=com.oracle -DartifactId=bpm-services -Dversion=11.1.1 -Dpackaging=jar
-    mvn install:install-file -Dfile=I:/Middleware/oracle_common/soa/modules/oracle.soa.mgmt_11.1.1/soa-infra-mgmt.jar -DgroupId=com.oracle -DartifactId=soa-infra-mgmt -Dversion=11.1.1 -Dpackaging=jar
-    mvn install:install-file -Dfile=I:/Middleware/Oracle_SOA1/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar -DgroupId=com.oracle -DartifactId=soa.fabric -Dversion=11.1.1 -Dpackaging=jar
-
-    SOA 12.2.1
-    mvn install:install-file -Dfile=E:/Oracle/Middleware12210/Oracle_Home/soa/soa/modules/oracle.soa.workflow_11.1.1/bpm-services.jar -DgroupId=com.oracle -DartifactId=bpm-services -Dversion=12.2.1 -Dpackaging=jar
-    mvn install:install-file -Dfile=E:/Oracle/Middleware12210/Oracle_Home/soa/soa/modules/oracle.soa.mgmt_11.1.1/soa-infra-mgmt.jar -DgroupId=com.oracle -DartifactId=soa-infra-mgmt -Dversion=12.2.1 -Dpackaging=jar
-    mvn install:install-file -Dfile=E:/Oracle/Middleware12210/Oracle_Home/soa/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar -DgroupId=com.oracle -DartifactId=soa.fabric -Dversion=12.2.1 -Dpackaging=jar
--->
 
     <dependencies>
         <!-- Compiling Dependencies -->
@@ -63,19 +48,22 @@
             <groupId>com.oracle</groupId>
             <artifactId>bpm-services</artifactId>
             <version>${soa-version}</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.workflow_11.1.1/bpm-services.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>soa-infra-mgmt</artifactId>
             <version>${soa-version}</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.mgmt_11.1.1/soa-infra-mgmt.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>soa.fabric</artifactId>
+            <artifactId>bpm-infra</artifactId>
             <version>${soa-version}</version>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
