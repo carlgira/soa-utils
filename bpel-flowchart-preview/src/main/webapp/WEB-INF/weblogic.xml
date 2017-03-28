@@ -10,6 +10,14 @@
         <wls:prefer-application-packages>
             <wls:package-name>org.springframework.*</wls:package-name>
             <wls:package-name>org.slf4j</wls:package-name>
+            <wls:package-name>org.joda.*</wls:package-name>
         </wls:prefer-application-packages>
     </wls:container-descriptor>
+    <wls:library-ref>
+        <wls:library-name>oracle.rules</wls:library-name>
+    </wls:library-ref>
+
+    <wls:library-ref>
+        <wls:library-name>oracle.soa.workflow</wls:library-name>
+    </wls:library-ref>
 </wls:weblogic-web-app>

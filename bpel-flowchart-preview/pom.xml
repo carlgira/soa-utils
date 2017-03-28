@@ -63,16 +63,19 @@
             <groupId>com.oracle</groupId>
             <artifactId>bpm-services</artifactId>
             <version>${soa-version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>soa-infra-mgmt</artifactId>
             <version>${soa-version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>soa.fabric</artifactId>
             <version>${soa-version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -156,7 +159,7 @@
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>soa.fabric</artifactId>
+            <artifactId>bpm-infra</artifactId>
             <version>${soa-version}</version>
             <scope>system</scope>
             <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar</systemPath>
@@ -189,7 +192,13 @@
             <scope>system</scope>
             <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/tracking-api.jar</systemPath>
         </dependency>
-
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>fabric-runtime</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/fabric-runtime.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
