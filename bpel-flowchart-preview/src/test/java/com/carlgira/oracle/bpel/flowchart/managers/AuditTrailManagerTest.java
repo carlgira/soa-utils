@@ -64,7 +64,7 @@ public class AuditTrailManagerTest {
 
     public static void main(String[] args) throws Exception {
         AuditTrailManagerTest auditTrailManagerTest = new AuditTrailManagerTest();
-        AuditTrailManager manager = auditTrailManagerTest.testAuditTrailManager("8590001");
+        AuditTrailManager manager = auditTrailManagerTest.testAuditTrailManager("30014");
 
 
         //SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");

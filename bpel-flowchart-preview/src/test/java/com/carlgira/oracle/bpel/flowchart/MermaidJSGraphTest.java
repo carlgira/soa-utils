@@ -71,9 +71,9 @@ public class MermaidJSGraphTest {
 
         //DOC.AltaUnidadesOfertantes.last.AltaUnidadesOfertantes
 
-        CompositeDN compositeDN = new CompositeDN("DLF/IngresoGarantias!5.15.1");
-        String bpel = "IngresoGarantias";
-        String bpelid = "10291248";
+        CompositeDN compositeDN = new CompositeDN("default/TestProject!1.0");
+        String bpel = "TestBpel";
+        String bpelid = "40002";
 
 
         MermaidJSGraphTest bpelFlowChartPreviewTest = new MermaidJSGraphTest();
