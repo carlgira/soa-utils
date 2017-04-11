@@ -1,13 +1,11 @@
 package com.carlgira.oracle.bpel.flowchart.managers;
 
-import com.carlgira.util.JAXBMarshaller;
+import com.carlgira.util.Utils;
 import com.oracle.schemas.bpel.audit_trail.AuditTrail;
 import com.oracle.schemas.bpel.audit_trail.Event;
-import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
 
-import java.text.ParseException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -23,7 +21,16 @@ public class AuditTrailManager {
      * @param xmlContent The whole content of the audit trail
      */
     public AuditTrailManager(String xmlContent) {
-        this.auditTrail = (AuditTrail) JAXBMarshaller.unmarshallString(xmlContent, AuditTrail.class);
+
+/*
+        try(  PrintWriter out = new PrintWriter( "d:\\filename.txt" )  ){
+            out.println( xmlContent );
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+*/
+        this.auditTrail = (AuditTrail) Utils.unmarshallString(xmlContent, AuditTrail.class);
     }
 
     /**
@@ -42,7 +49,7 @@ public class AuditTrailManager {
      */
 
     /**
-     * Search inside the AuditTrail for a Event with the specified label
+     * Search inside the AuditTrail the last Event in time with the specified label
      * @param label The label of the node (the activity name in the bpel)
      * @return
      */
@@ -55,8 +62,8 @@ public class AuditTrailManager {
                 }
                 else{
                     if(eventType.getDate() != null){
-                        Date date1 = parseDate(e.getDate());
-                        Date date2 = parseDate(eventType.getDate());
+                        Date date1 = Utils.parseDate(e.getDate());
+                        Date date2 = Utils.parseDate(eventType.getDate());
                         if(date1 != null && date2 != null && date1.before(date2)){
                             e = eventType;
                         }
@@ -108,8 +115,8 @@ public class AuditTrailManager {
                     }
                     else{
                         if(eventType.getDate() != null) {
-                            Date date1 = parseDate(e.getDate());
-                            Date date2 = parseDate(eventType.getDate());
+                            Date date1 = Utils.parseDate(e.getDate());
+                            Date date2 = Utils.parseDate(eventType.getDate());
                             if (date1 != null && date2 != null && date1.before(date2)) {
                                 e = eventType;
                             }
@@ -158,8 +165,8 @@ public class AuditTrailManager {
                 }
                 else{
                     if(eventType.getDate() != null) {
-                        Date date1 = parseDate(e.getDate());
-                        Date date2 = parseDate(eventType.getDate());
+                        Date date1 = Utils.parseDate(e.getDate());
+                        Date date2 = Utils.parseDate(eventType.getDate());
                         if (date1 != null && date2 != null && date1.before(date2)) {
                             e = eventType;
                         }
@@ -168,17 +175,5 @@ public class AuditTrailManager {
             }
         }
         return e;
-    }
-
-    private Date parseDate(String dateString){
-        Date date = null;
-        try{
-            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-            date = dt.parse(dateString.substring(0,19));
-        }
-        catch (Exception e){
-            return null;
-        }
-        return  date;
     }
 }

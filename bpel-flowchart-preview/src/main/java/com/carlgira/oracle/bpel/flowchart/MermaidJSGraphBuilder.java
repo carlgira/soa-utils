@@ -8,6 +8,7 @@ import com.carlgira.oracle.bpel.flowchart.mermaid.Link;
 import com.carlgira.oracle.bpel.flowchart.mermaid.Node;
 import com.carlgira.oracle.bpel.flowchart.mermaid.TypeOfNode;
 import com.carlgira.util.ServerConnection;
+import com.carlgira.util.Utils;
 import com.oracle.schemas.bpel.audit_trail.Event;
 import oracle.bpel.services.workflow.repos.Predicate;
 import oracle.bpel.services.workflow.repos.TableConstants;
@@ -18,7 +19,6 @@ import oracle.soa.management.facade.bpel.BPELInstance;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -151,7 +151,9 @@ public class MermaidJSGraphBuilder {
                         for (int i = 0; i < this.listOfLinks.size(); i++) {
                             Link link = this.listOfLinks.get(i);
                             if (link.beginNode.endsWith(node.id)) {
-                                link.message = task.getSystemAttributes().getOutcome();
+                                if(link.message == null){
+                                    link.message = task.getSystemAttributes().getOutcome();
+                                }
                                 this.listOfLinks.set(i, link);
                                 node.setActive(true);
                                 node.createdDate = task.getSystemAttributes().getCreatedDate().getTime();
@@ -204,27 +206,15 @@ public class MermaidJSGraphBuilder {
             Event e = null;
             if( (e = auditTrailManager.getLastEvent(node.id,5)) != null){
                 node.setActive(true);
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
             else if( (e = auditTrailManager.getLastEvent(node.id)) != null){
                 node.initiated = true;
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
         }
-    }
-
-    private Date parseDate(String dateString){
-        Date result = null;
-        try{
-            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-            result = dt.parse(dateString.substring(0,19));
-        }
-        catch (Exception e){
-            return null;
-        }
-        return  result;
     }
 
     /**
@@ -236,17 +226,17 @@ public class MermaidJSGraphBuilder {
             Event e = null;
             if( (e = auditTrailManager.getLastEvent(node.id, 1)) != null){
                 node.initiated = true;
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
             if((e = auditTrailManager.getLastEvent(node.id, 5)) != null){
                 node.setActive(true);
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
             else if( (e = auditTrailManager.getLastEventWithError(node.id)) != null){
                 node.setActive(true);
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 node.state = Integer.parseInt(e.getState());
                 this.nodes.put(node.id, node);
             }
@@ -262,18 +252,18 @@ public class MermaidJSGraphBuilder {
             Event e = null;
             if((e = auditTrailManager.getLastEvent(node.id, 1)) != null){
                 node.initiated = true;
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
             if((e = auditTrailManager.getLastEvent(node.id, 5)) != null){
                 node.setActive(true);
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
             else if( (e = auditTrailManager.getLastEventWithError(node.id)) != null) {
                 node.setActive(true);
                 node.state = Integer.parseInt(e.getState());
-                node.createdDate = parseDate(e.getDate());
+                node.createdDate = Utils.parseDate(e.getDate());
                 this.nodes.put(node.id, node);
             }
         }
@@ -343,25 +333,62 @@ public class MermaidJSGraphBuilder {
      * This functions adds styles to all links between active nodes.
      */
     public void drawLinks(){
-
         for(Node node : this.nodes.values()){
-            System.out.println(node.id + " " + node.createdDate +  " " + node.getActive() + " " + node.initiated );
         }
+
+        List<Integer> drawLinks = new ArrayList<>();
 
         for(int i= 0;i < this.listOfLinks.size();i++){
             Link link = this.listOfLinks.get(i);
             Node beginNode = this.nodes.get(link.beginNode.substring(link.beginNode.indexOf("_") +1));
             Node endNode = this.nodes.get(link.endNode.substring(link.endNode.indexOf("_")+1));
-            if(beginNode.initiated && endNode.initiated && hasParents(beginNode)){
-                this.restOfFile.add(this.linkStyle.replace("linkStyle 0", "linkStyle " + i));
+            if(beginNode.initiated && endNode.initiated && hasParents(beginNode) && checkNodeDates(beginNode, endNode)){
+                drawLinks.add(i);
+
+
             }
             else if(this.links.get(beginNode.type + "_" + beginNode.id) != null &&
                     this.links.get(beginNode.type + "_" + beginNode.id).size() == 1 &&
-                    beginNode.getActive() && hasParents(beginNode) && !isNodeInErrorState(beginNode)){
-                this.restOfFile.add(this.linkStyle.replace("linkStyle 0", "linkStyle " + i));
+                    beginNode.getActive() && hasParents(beginNode) && !isNodeInErrorState(beginNode) && checkNodeDates(beginNode, endNode)){
+                drawLinks.add(i);
             }
         }
+
+        List<Integer> linksToDraw = postLinkCheck(drawLinks);
+        for(Integer linkToDraw : linksToDraw){
+            this.restOfFile.add(this.linkStyle.replace("linkStyle 0", "linkStyle " + linkToDraw));
+        }
     }
+
+
+    private  List<Integer> postLinkCheck(List<Integer> drawLinks){
+        List<Integer> result = new ArrayList<>();
+
+        for(int i=0;i<drawLinks.size();i++){
+            Link linkI = this.listOfLinks.get(drawLinks.get(i));
+            Node beginNode = this.nodes.get(linkI.beginNode.substring(linkI.beginNode.indexOf("_") +1));
+            if(beginNode.type.equals("init")){
+                result.add(drawLinks.get(i));
+               continue;
+            }
+            for(int e=0;e<drawLinks.size();e++){
+                Link linkE = this.listOfLinks.get(drawLinks.get(e));
+                Node endNode = this.nodes.get(linkE.endNode.substring(linkE.endNode.indexOf("_")+1));
+                if(beginNode.id.equals(endNode.id)){
+                    result.add(drawLinks.get(i));
+                    break;
+                }
+            }
+        }
+
+        if(drawLinks.size() != result.size()){
+            return postLinkCheck(result);
+        }
+
+        return result;
+    }
+
+
 
     /**
      * Aditional checks to avoid problems with concurrent paths and repetitive names
@@ -377,13 +404,26 @@ public class MermaidJSGraphBuilder {
                 Node parentNode = this.nodes.get(link.beginNode.substring(link.beginNode.indexOf("_")+1));
                 if(link.endNode.equals(node.type + "_" + node.id) && (parentNode.getActive() || parentNode.initiated)){
                     if(node.createdDate != null && parentNode.createdDate != null){
-                        System.out.println(node.id + " " + parentNode.id + " " + node.createdDate.compareTo(parentNode.createdDate));
                         return node.createdDate.compareTo(parentNode.createdDate) >= 0;
                     }
                     return true;
                 }
             }
         return false;
+    }
+
+    /**
+     * Check that the beginNode has a date before that the endNode
+     * @param beginNode
+     * @param endNode
+     * @return
+     */
+    private boolean checkNodeDates(Node beginNode, Node endNode){
+
+        if(beginNode.createdDate == null || endNode.createdDate == null){
+            return true;
+        }
+        return beginNode.createdDate.compareTo(endNode.createdDate) <= 0;
     }
 
     /**

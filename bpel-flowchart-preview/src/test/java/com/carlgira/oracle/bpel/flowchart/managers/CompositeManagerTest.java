@@ -28,8 +28,8 @@ public class CompositeManagerTest {
         String pass = prop.getProperty("password");
         String realm = prop.getProperty("realm");
 
-        CompositeDN compositeDN = new CompositeDN("DOC/AltaUnidadesOfertantes!5.4");
-        String componentName = "AltaUnidadesOfertantes";
+        CompositeDN compositeDN = new CompositeDN("default/TestProject!1.0");
+        String componentName = "TestBpel";
 
         ServerConnection serverConnection = new ServerConnection(server, user, pass, realm);
 

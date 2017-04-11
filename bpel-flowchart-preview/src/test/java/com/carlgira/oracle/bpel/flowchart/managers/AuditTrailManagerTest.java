@@ -36,7 +36,7 @@ public class AuditTrailManagerTest {
         String auditTrail = bpelInstance.getAuditTrail().toString();
         //System.out.println(auditTrail);
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("auof.txt"));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("auof123.txt"));
         bufferedWriter.write(auditTrail);
         bufferedWriter.flush();
         bufferedWriter.close();
@@ -64,7 +64,7 @@ public class AuditTrailManagerTest {
 
     public static void main(String[] args) throws Exception {
         AuditTrailManagerTest auditTrailManagerTest = new AuditTrailManagerTest();
-        AuditTrailManager manager = auditTrailManagerTest.testAuditTrailManager("9500114");
+        AuditTrailManager manager = auditTrailManagerTest.testAuditTrailManager("30014");
 
 
         //SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");

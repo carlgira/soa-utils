@@ -11,21 +11,14 @@
 
 
     <properties>
-        <!-- <mdw.home>/home/carlgira/Oracle/Middleware</mdw.home> -->
-        <mdw.home>I:\Middleware</mdw.home>
+       
+        <mdw.home>/u01/app/oracle/fmw/12.2</mdw.home>
         <java.version>1.7</java.version>
         <spring.version>4.2.5.RELEASE</spring.version>
         <jstl.version>1.2</jstl.version>
         <servletapi.version>2.5</servletapi.version>
+        <soa-version>12.2.1</soa-version>
     </properties>
-
-    <!--
-    You need to install these libs because system scope dependencies are not included inside the war.
-    All the other system scope dependencies are to test the code outside the weblogic.
-    mvn install:install-file -Dfile=I:/Middleware/Oracle_SOA1/soa/modules/oracle.soa.workflow_11.1.1/bpm-services.jar -DgroupId=com.oracle -DartifactId=bpm-services -Dversion=11.1.1 -Dpackaging=jar
-    mvn install:install-file -Dfile=I:/Middleware/oracle_common/soa/modules/oracle.soa.mgmt_11.1.1/soa-infra-mgmt.jar -DgroupId=com.oracle -DartifactId=soa-infra-mgmt -Dversion=11.1.1 -Dpackaging=jar
-    mvn install:install-file -Dfile=I:/Middleware/Oracle_SOA1/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar -DgroupId=com.oracle -DartifactId=soa.fabric -Dversion=11.1.1 -Dpackaging=jar
--->
 
     <dependencies>
         <!-- Compiling Dependencies -->
@@ -54,17 +47,23 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>bpm-services</artifactId>
-            <version>11.1.1</version>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.workflow_11.1.1/bpm-services.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>soa-infra-mgmt</artifactId>
-            <version>11.1.1</version>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.mgmt_11.1.1/soa-infra-mgmt.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>soa.fabric</artifactId>
-            <version>11.1.1</version>
+            <artifactId>bpm-infra</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -73,6 +72,7 @@
         </dependency>
 
         <!-- Testing Dependencies -->
+        <!--
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>wsclient_extended</artifactId>
@@ -131,24 +131,61 @@
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>weblogic</artifactId>
-            <version>11.1.1</version>
-            <scope>system</scope>
-            <systemPath>${mdw.home}/wlserver_10.3/server/lib/weblogic.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
             <artifactId>wsclient_extended</artifactId>
             <version>11.1.1</version>
             <scope>system</scope>
             <systemPath>${mdw.home}/oracle_common/webservices/wsclient_extended.jar</systemPath>
         </dependency>
+        -->
+
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>soa.fabric</artifactId>
-            <version>11.1.1</version>
+            <artifactId>weblogic</artifactId>
+            <version>${soa-version}</version>
             <scope>system</scope>
-            <systemPath>${mdw.home}/Oracle_SOA1/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar</systemPath>
+            <systemPath>${mdw.home}/wlserver/server/lib/weblogic.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>bpm-infra</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>xml-xdk</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/oracle.xdk/xml.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>jrf-api</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/oracle.jrf/jrf-api.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>wsclient-rt</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/oracle_common/modules/com.oracle.webservices.fmw.wsclient-rt-impl.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>tracking-api</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/tracking-api.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>fabric-runtime</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/fabric-runtime.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -159,8 +196,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -22,7 +25,7 @@ import java.util.Properties;
 @Controller
 public class ServletController {
 
-    private static Properties properties;
+    public static Properties properties;
     static{
         loadProperties();
     }
@@ -136,19 +139,18 @@ public class ServletController {
      * @throws Exception
      */
     @RequestMapping( path = "/{partition}/{composite}/{version}/{bpel}/flowchartString.htm")
+    @ResponseBody
     public String flowChartString(@PathVariable("partition") String partition,
-                                               @PathVariable("composite") String composite,
-                                               @PathVariable("version") String version,
-                                               @PathVariable("bpel") String bpel,
-                                               @RequestParam(value = "bpelid", required = true) String bpelid) throws Exception {
-        MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
-        try {
-            mainBPELPreview.buildMermaidJSGraph(partition, composite, version, bpel, bpelid);
-        } catch (Exception e) {
-            return null;
-        }
+                                     @PathVariable("composite") String composite,
+                                     @PathVariable("version") String version,
+                                     @PathVariable("bpel") String bpel,
+                                     @RequestParam(value = "bpelid", required = true) String bpelid) throws Exception {
+        MainBPELPreview mainBPELPreview = new MainBPELPreview(ServletController.properties);
+        mainBPELPreview.buildMermaidJSGraph(partition, composite, version, bpel, bpelid);
 
-        return mainBPELPreview.getBpelFlowChartController().writeResponse();
+        String salida = mainBPELPreview.getBpelFlowChartController().writeResponse();
+
+        return salida;
     }
 
     /**
