@@ -103,7 +103,8 @@ public class MainBPELPreview {
     }
 
     public String getImageBase64() {
-        return Base64.encodeBase64String(imgContent);
+        //return Base64.encodeBase64String(imgContent); FIX
+        return null;
     }
 
     public byte[] getImage() {

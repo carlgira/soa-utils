@@ -62,7 +62,8 @@ public class MermaidJSGraphTest {
         Process process = Runtime.getRuntime().exec(command);
         process.waitFor();
 
-        String imageDataString = Base64.encodeBase64String(Files.readAllBytes(Paths.get(outputDir + "/" + bpelId + ".mmd.png")));
+        String imageDataString = ""; //FIX
+                //Base64.encodeBase64String(Files.readAllBytes(Paths.get(outputDir + "/" + bpelId + ".mmd.png")));
 
         return imageDataString;
     }

@@ -1,5 +1,6 @@
 package com.carlgira.oracle.bpel.flowchart.managers;
 
+import com.carlgira.util.CEvent;
 import com.carlgira.util.Utils;
 import com.oracle.schemas.bpel.audit_trail.AuditTrail;
 import com.oracle.schemas.bpel.audit_trail.Event;
@@ -12,7 +13,7 @@ import java.util.Date;
  * Created by carlgira on 08/03/2016.
  * Class to parse the content of a BPEL AuditTrail. Add some functions to lookup all the events.
  */
-public class AuditTrailManager {
+public class BpelAuditTrailManager implements IAuditTrailManager {
 
     private AuditTrail auditTrail;
 
@@ -20,7 +21,7 @@ public class AuditTrailManager {
      * Parse a xmlString to an auditTrail object
      * @param xmlContent The whole content of the audit trail
      */
-    public AuditTrailManager(String xmlContent) {
+    public BpelAuditTrailManager(String xmlContent) {
 
 /*
         try(  PrintWriter out = new PrintWriter( "d:\\filename.txt" )  ){
@@ -53,7 +54,7 @@ public class AuditTrailManager {
      * @param label The label of the node (the activity name in the bpel)
      * @return
      */
-    public Event getLastEvent(String label) {
+    public CEvent getLastEvent(String label) {
         Event e = null;
         for(Event eventType : this.auditTrail.getEvent()){
             if( eventType.getLabel() != null && (label.equals(eventType.getLabel()) || eventType.getLabel().startsWith(label + " "))) {
@@ -71,7 +72,7 @@ public class AuditTrailManager {
                 }
             }
         }
-        return e;
+        return new CEvent(e);
     }
 
     /**
@@ -101,7 +102,7 @@ public class AuditTrailManager {
      * @param label The label of the node (the activity name in the bpel)
      * @return
      */
-    public Event getLastEventWithError(String label){
+    public CEvent getLastEventWithError(String label){
         Event e = null;
         for(Event eventType : this.auditTrail.getEvent()){
             if(eventType.getState() != null){
@@ -125,7 +126,7 @@ public class AuditTrailManager {
                 }
             }
         }
-        return e;
+        return new CEvent(e);
     }
 
     /**
@@ -153,7 +154,7 @@ public class AuditTrailManager {
      * @param state Number of the state of the node
      * @return
      */
-    public Event getLastEvent(String label, Integer state){
+    public CEvent getLastEvent(String label, Integer state){
         Event e = null;
         for(Event eventType : this.auditTrail.getEvent()){
             if( (eventType.getLabel()  != null  && eventType.getState() != null)  &&
@@ -174,6 +175,6 @@ public class AuditTrailManager {
                 }
             }
         }
-        return e;
+        return new CEvent(e);
     }
 }

@@ -2,7 +2,9 @@ package com.carlgira.oracle.bpel.flowchart.managers;
 
 import com.carlgira.util.ServerConnection;
 import oracle.soa.management.CompositeDN;
+import oracle.soa.management.facade.ComponentInstance;
 import oracle.soa.management.facade.bpel.BPELInstance;
+import oracle.soa.management.facade.flow.FlowInstance;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -40,8 +42,28 @@ public class CompositeManagerTest {
     }
 
     public static void main(String args[]) throws Exception {
-        CompositeManagerTest compositeManagerTest = new CompositeManagerTest();
-        BPELInstance bpelInstance = compositeManagerTest.testCompositeManager("8530017");
-        assertNotNull(bpelInstance);
+        String server = "t3://localhost:7003/soa-infra/";
+        String user = "weblogic";
+        String pass = "WELCOME1";
+        String realm = "jazn.com";
+
+        CompositeDN compositeDN = new CompositeDN("default/BpmProject!1.0");
+        String componentName = "Process";
+
+        ServerConnection serverConnection = new ServerConnection(server, user, pass, realm);
+
+        CompositeManager compositeManager = new CompositeManager(serverConnection);
+        compositeManager.init();
+
+        ComponentInstance componentInstance = compositeManager.getComponentById(compositeDN, componentName, "2");
+        System.out.println(componentInstance.getServiceEngine().getEngineType());
+
+        FlowInstance flowInstance = compositeManager.getFlowInstanceByFlowId(1L);
+
+        for(ComponentInstance ci : flowInstance.getComponentInstances()){
+            System.out.println(ci.getComponentName());
+            System.out.println(ci.getAuditTrail());
+            System.out.println();
+        }
     }
 }

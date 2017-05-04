@@ -1,20 +1,17 @@
 package com.carlgira.oracle.bpel.flowchart;
 
-import com.carlgira.oracle.bpel.flowchart.managers.AuditTrailManager;
-import com.carlgira.oracle.bpel.flowchart.managers.CompositeManager;
-import com.carlgira.oracle.bpel.flowchart.managers.HtQuery;
-import com.carlgira.oracle.bpel.flowchart.managers.HumanTaskManager;
+import com.carlgira.oracle.bpel.flowchart.managers.*;
 import com.carlgira.oracle.bpel.flowchart.mermaid.Link;
 import com.carlgira.oracle.bpel.flowchart.mermaid.Node;
 import com.carlgira.oracle.bpel.flowchart.mermaid.TypeOfNode;
+import com.carlgira.util.CEvent;
 import com.carlgira.util.ServerConnection;
 import com.carlgira.util.Utils;
-import com.oracle.schemas.bpel.audit_trail.Event;
 import oracle.bpel.services.workflow.repos.Predicate;
 import oracle.bpel.services.workflow.repos.TableConstants;
 import oracle.bpel.services.workflow.task.model.Task;
 import oracle.soa.management.CompositeDN;
-import oracle.soa.management.facade.bpel.BPELInstance;
+import oracle.soa.management.facade.ComponentInstance;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -43,7 +40,7 @@ public class MermaidJSGraphBuilder {
     private ServerConnection serverConnection;
     private HumanTaskManager humanTaskManager;
     private CompositeManager compositeManager;
-    private BPELInstance bpelInstance;
+    private ComponentInstance componentInstance;
 
     /**
      * Constructor, needs the serverConnection object and the graphFile template.
@@ -89,14 +86,14 @@ public class MermaidJSGraphBuilder {
      */
     public void buildNodes(CompositeDN compositeDN, String componentName, String componentId) throws Exception {
 
-        this.bpelInstance = compositeManager.getBPELById(compositeDN, componentName, componentId);
+        this.componentInstance = compositeManager.getComponentById(compositeDN, componentName, componentId);
 
-        if(bpelInstance == null){
+        if(componentInstance == null){
             throw new Exception("BPEL Instance not found");
         }
 
         if(!this.nodesByType.get(TypeOfNode.NODE_HT).isEmpty()){
-            HtQuery htQuery = new HtQuery(TableConstants.WFTASK_COMPOSITEINSTANCEID_COLUMN, Predicate.OP_EQ, bpelInstance.getCompositeInstanceId());
+            HtQuery htQuery = new HtQuery(TableConstants.WFTASK_COMPOSITEINSTANCEID_COLUMN, Predicate.OP_EQ, componentInstance.getCompositeInstanceId());
             HtQuery htQuery1 = new HtQuery(TableConstants.WFTASK_WORKFLOWPATTERN_COLUMN, Predicate.OP_EQ, "Participant");
 
             List<HtQuery> htQueryList = new ArrayList<>();
@@ -107,8 +104,15 @@ public class MermaidJSGraphBuilder {
             buildHTNodes(tasks);
         }
 
-        String auditTrail = bpelInstance.getAuditTrail().toString();
-        AuditTrailManager auditTrailManager = new AuditTrailManager(auditTrail);
+        String auditTrail = componentInstance.getAuditTrail().toString();
+        IAuditTrailManager auditTrailManager = null;
+
+        if(componentInstance.getServiceEngine().getEngineType().equals("bpel")){
+            auditTrailManager = new BpelAuditTrailManager(auditTrail);
+        }
+        else{
+            auditTrailManager = new BpmAuditTrailManager();
+        }
 
         buildINITNodes(auditTrailManager);
         buildBPELNodes(auditTrailManager);
@@ -175,7 +179,7 @@ public class MermaidJSGraphBuilder {
      * Check the mermaid graph against the object in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active.
      * @param auditTrailManager
      */
-    private void buildOBJNodes(AuditTrailManager auditTrailManager){
+    private void buildOBJNodes(IAuditTrailManager auditTrailManager){
         activateNodes(auditTrailManager, TypeOfNode.NODE_OBJ);
     }
 
@@ -183,7 +187,7 @@ public class MermaidJSGraphBuilder {
      * Check the mermaid graph against the object in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active.
      * @param auditTrailManager
      */
-    private void buildFNNodes(AuditTrailManager auditTrailManager){
+    private void buildFNNodes(IAuditTrailManager auditTrailManager){
         activateNodes(auditTrailManager, TypeOfNode.NODE_FN);
     }
 
@@ -191,7 +195,7 @@ public class MermaidJSGraphBuilder {
      * Check the mermaid graph against the object in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active.
      * @param auditTrailManager
      */
-    private void buildINITNodes(AuditTrailManager auditTrailManager){
+    private void buildINITNodes(IAuditTrailManager auditTrailManager){
         activateNodes(auditTrailManager, TypeOfNode.NODE_INIT);
     }
 
@@ -201,9 +205,9 @@ public class MermaidJSGraphBuilder {
      * @param auditTrailManager
      * @param type
      */
-    private void activateNodes(AuditTrailManager auditTrailManager, String type){
+    private void activateNodes(IAuditTrailManager auditTrailManager, String type){
         for(Node node : this.nodesByType.get(type)){
-            Event e = null;
+            CEvent e = null;
             if( (e = auditTrailManager.getLastEvent(node.id,5)) != null){
                 node.setActive(true);
                 node.createdDate = Utils.parseDate(e.getDate());
@@ -221,9 +225,9 @@ public class MermaidJSGraphBuilder {
      * Check the mermaid graph against the webservice call in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active, if the call return error the node style is changed.
      * @param auditTrailManager
      */
-    private void buildWSNodes(AuditTrailManager auditTrailManager){
+    private void buildWSNodes(IAuditTrailManager auditTrailManager){
         for(Node node : this.nodesByType.get(TypeOfNode.NODE_WS)){
-            Event e = null;
+            CEvent e = null;
             if( (e = auditTrailManager.getLastEvent(node.id, 1)) != null){
                 node.initiated = true;
                 node.createdDate = Utils.parseDate(e.getDate());
@@ -247,9 +251,9 @@ public class MermaidJSGraphBuilder {
      * Check the mermaid graph against a sub-bpel call in the bpel audit trail. If the activity has been completed, the mermaid.js node graph is set to active, if the call return error the node style is changed.
      * @param auditTrailManager
      */
-    private void buildBPELNodes(AuditTrailManager auditTrailManager){
+    private void buildBPELNodes(IAuditTrailManager auditTrailManager){
         for(Node node : this.nodesByType.get(TypeOfNode.NODE_BPEL)){
-            Event e = null;
+            CEvent e = null;
             if((e = auditTrailManager.getLastEvent(node.id, 1)) != null){
                 node.initiated = true;
                 node.createdDate = Utils.parseDate(e.getDate());
@@ -527,9 +531,5 @@ public class MermaidJSGraphBuilder {
 
         this.restOfFile = flowChart.subList(index, flowChart.size()-1);
         this.linkStyle = flowChart.get(flowChart.size() - 1);
-    }
-
-    public BPELInstance getBpelInstance() {
-        return bpelInstance;
     }
 }

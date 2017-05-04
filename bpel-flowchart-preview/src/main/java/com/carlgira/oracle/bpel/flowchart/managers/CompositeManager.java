@@ -4,8 +4,11 @@ import com.carlgira.util.ServerConnection;
 import oracle.soa.management.CompositeDN;
 import oracle.soa.management.facade.*;
 import oracle.soa.management.facade.bpel.BPELInstance;
+import oracle.soa.management.facade.flow.FlowInstance;
 import oracle.soa.management.util.ComponentInstanceFilter;
 import oracle.soa.management.util.CompositeInstanceFilter;
+import oracle.soa.management.util.flow.FlowInstanceFilter;
+
 import javax.naming.Context;
 import java.util.Date;
 import java.util.Hashtable;
@@ -81,14 +84,26 @@ public class CompositeManager {
      * @throws Exception
      */
     public BPELInstance getBPELById(CompositeDN compositeDN, String processName,String bpelId) throws Exception {
-        Component component = locator.lookupComponent(compositeDN, processName );
+        return (BPELInstance)getComponentById(compositeDN,processName, bpelId );
+    }
+
+    /**
+     * Search for a component by the id
+     * @param compositeDN
+     * @param componentName
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public ComponentInstance getComponentById(CompositeDN compositeDN, String componentName,String id) throws Exception {
+        Component component = locator.lookupComponent(compositeDN, componentName );
         ComponentInstanceFilter compInstFilter = new ComponentInstanceFilter();
-        compInstFilter.setId(bpelId);
+        compInstFilter.setId(id);
 
         List<ComponentInstance> compInstances = component.getInstances(compInstFilter);
 
         if (compInstances != null && !compInstances.isEmpty()) {
-            return (BPELInstance)compInstances.get(0);
+            return compInstances.get(0);
         }
         return null;
     }
@@ -111,5 +126,23 @@ public class CompositeManager {
             return compInstances.get(0);
         }
         return null;
+    }
+
+    /**
+     * Return a FlowInstance using a Flowid
+     * @param flowId
+     * @return
+     * @throws Exception
+     */
+    public FlowInstance getFlowInstanceByFlowId(Long flowId) throws Exception {
+        FlowInstanceFilter flowInstanceFilter = new FlowInstanceFilter();
+        flowInstanceFilter.setFlowId(flowId);
+        List<FlowInstance> flowInstances = locator.getFlowInstances(flowInstanceFilter);
+
+        if(flowInstances == null || (flowInstances != null && flowInstances.size() != 1)){
+            return null;
+        }
+
+        return flowInstances.get(0);
     }
 }

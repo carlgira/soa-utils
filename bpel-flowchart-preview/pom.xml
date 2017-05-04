@@ -11,9 +11,11 @@
 
 
     <properties>
-       
+
+        <!--
         <mdw.home>/u01/app/oracle/fmw/12.2</mdw.home>
-        <java.version>1.7</java.version>
+        -->
+        <mdw.home>I:\Middleware12c\Oracle_Home</mdw.home>
         <spring.version>4.2.5.RELEASE</spring.version>
         <jstl.version>1.2</jstl.version>
         <servletapi.version>2.5</servletapi.version>
@@ -66,9 +68,24 @@
             <systemPath>${mdw.home}/soa/soa/modules/oracle.soa.fabric_11.1.1/bpm-infra.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>bpm-em-tools</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/bpm/modules/oracle.bpm.mgmt_11.1.1/oracle.bpm.bpmn-em-tools.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>bpm-em-tools</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/bpm/modules/oracle.bpm.mgmt_11.1.1/oracle.bpm.bpmn-em-tools.jar</systemPath>
         </dependency>
 
         <!-- Testing Dependencies -->

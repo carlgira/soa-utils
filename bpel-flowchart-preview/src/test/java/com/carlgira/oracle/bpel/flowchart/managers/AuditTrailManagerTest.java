@@ -1,14 +1,11 @@
 package com.carlgira.oracle.bpel.flowchart.managers;
 
-import com.oracle.schemas.bpel.audit_trail.Event;
+import com.carlgira.util.CEvent;
 import oracle.soa.management.facade.bpel.BPELInstance;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Properties;
 import static org.junit.Assert.*;
 
@@ -19,7 +16,7 @@ public class AuditTrailManagerTest {
 
     private Properties prop;
     private ClassLoader classLoader;
-    private AuditTrailManager auditTrailManager;
+    private BpelAuditTrailManager bpelAuditTrailManager;
 
     public AuditTrailManagerTest() throws IOException {
         ClassLoader classLoader = AuditTrailManagerTest.class.getClassLoader();
@@ -27,7 +24,7 @@ public class AuditTrailManagerTest {
         prop.load(classLoader.getResource("bpel-flowchart-preview.properties").openStream());
     }
 
-    public AuditTrailManager testAuditTrailManager(String compositeId) throws Exception {
+    public BpelAuditTrailManager testAuditTrailManager(String compositeId) throws Exception {
         CompositeManagerTest compositeManagerTest = new CompositeManagerTest();
         BPELInstance  bpelInstance = compositeManagerTest.testCompositeManager(compositeId);
 
@@ -42,29 +39,29 @@ public class AuditTrailManagerTest {
         bufferedWriter.close();
 
 
-        auditTrailManager = new AuditTrailManager(auditTrail);
+        bpelAuditTrailManager = new BpelAuditTrailManager(auditTrail);
 
-        return auditTrailManager;
+        return bpelAuditTrailManager;
     }
 
     public void testGetEvent(){
-        Event  event = auditTrailManager.getLastEvent("receiveInput");
+        CEvent event = bpelAuditTrailManager.getLastEvent("receiveInput");
         assertNotNull(event);
     }
 
     public void testGetEventStateCompleted(){
-        Event  event = auditTrailManager.getLastEvent("receiveInput", 5);
+        CEvent  event = bpelAuditTrailManager.getLastEvent("receiveInput", 5);
         assertNotNull(event);
     }
 
     public void testGetEventError(){
-        Event  event = auditTrailManager.getLastEventWithError("receiveInput");
+        CEvent  event = bpelAuditTrailManager.getLastEventWithError("receiveInput");
         assertNotNull(event);
     }
 
     public static void main(String[] args) throws Exception {
         AuditTrailManagerTest auditTrailManagerTest = new AuditTrailManagerTest();
-        AuditTrailManager manager = auditTrailManagerTest.testAuditTrailManager("30014");
+        BpelAuditTrailManager manager = auditTrailManagerTest.testAuditTrailManager("30014");
 
 
         //SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
