@@ -72,7 +72,7 @@ public class BpelAuditTrailManager implements IAuditTrailManager {
                 }
             }
         }
-        return new CEvent(e);
+        return e != null ? new CEvent(e) : null;
     }
 
     /**
@@ -126,7 +126,7 @@ public class BpelAuditTrailManager implements IAuditTrailManager {
                 }
             }
         }
-        return new CEvent(e);
+        return e != null ? new CEvent(e) : null;
     }
 
     /**
@@ -175,6 +175,6 @@ public class BpelAuditTrailManager implements IAuditTrailManager {
                 }
             }
         }
-        return new CEvent(e);
+        return e != null ? new CEvent(e) : null;
     }
 }

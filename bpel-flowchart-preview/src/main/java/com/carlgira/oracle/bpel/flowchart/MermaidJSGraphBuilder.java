@@ -104,14 +104,14 @@ public class MermaidJSGraphBuilder {
             buildHTNodes(tasks);
         }
 
-        String auditTrail = componentInstance.getAuditTrail().toString();
         IAuditTrailManager auditTrailManager = null;
 
         if(componentInstance.getServiceEngine().getEngineType().equals("bpel")){
+            String auditTrail = componentInstance.getAuditTrail().toString();
             auditTrailManager = new BpelAuditTrailManager(auditTrail);
         }
         else{
-            auditTrailManager = new BpmAuditTrailManager();
+            auditTrailManager = new BpmAuditTrailManager(serverConnection, componentId);
         }
 
         buildINITNodes(auditTrailManager);

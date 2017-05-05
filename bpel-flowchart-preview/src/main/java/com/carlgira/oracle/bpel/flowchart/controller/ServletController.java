@@ -128,6 +128,24 @@ public class ServletController {
     }
 
     /**
+     * Service that returns an imgage with the original bpm diagram.
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping( path = "/{type}/bpmImg.png")
+    public ResponseEntity<byte[]> flowChartBpmImg(@PathVariable("type") String type,
+                                               @RequestParam(value = "bpmId", required = true) String bpmId) throws Exception {
+
+        MainBPELPreview mainBPELPreview = new MainBPELPreview(properties);
+        byte[] r = mainBPELPreview.buildBpmGraphImage(bpmId, type);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        return new ResponseEntity<>(r, headers,HttpStatus.OK);
+    }
+
+    /**
      * Service that returns the mermaid.js text. (
      * This service check the state of the bpel instance and updates the graph template to see the actual state of the bpel.
      * @param partition The Soa Partition where the bpel reside deployed

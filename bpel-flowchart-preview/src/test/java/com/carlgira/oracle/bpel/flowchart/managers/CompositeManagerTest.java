@@ -55,15 +55,19 @@ public class CompositeManagerTest {
         CompositeManager compositeManager = new CompositeManager(serverConnection);
         compositeManager.init();
 
-        ComponentInstance componentInstance = compositeManager.getComponentById(compositeDN, componentName, "2");
-        System.out.println(componentInstance.getServiceEngine().getEngineType());
-
-        FlowInstance flowInstance = compositeManager.getFlowInstanceByFlowId(1L);
+        FlowInstance flowInstance = compositeManager.getFlowInstanceByFlowId(10006L);
 
         for(ComponentInstance ci : flowInstance.getComponentInstances()){
             System.out.println(ci.getComponentName());
-            System.out.println(ci.getAuditTrail());
-            System.out.println();
+            System.out.println(ci.getCompositeDN().toString());
+            System.out.println(ci.getId());
         }
+
+        //bpmn:10014
+        ComponentInstance componentInstance = compositeManager.getComponentById(compositeDN, componentName, "10014");
+        System.out.println(componentInstance.getServiceEngine().getEngineType());
+
+
+
     }
 }

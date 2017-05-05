@@ -72,7 +72,7 @@ public class AuditProcessImage1 {
         // Argument check
         // [0] Instance ID [1] Output File Path (In case of Windows, seperator of "\\" is required) [2] Audit|Process
 
-        String instanceId = "2";
+        String instanceId = "10011";
         String outputPath = "d://file.jpg";
 
         try {
@@ -103,7 +103,7 @@ public class AuditProcessImage1 {
                     System.out.println("---------------------------");
                 }
 
-
+/*
             String Base64 = instanceQueryService.getProcessAuditDiagram(bpmContext, instanceId, Locale.JAPAN);
 
             Image image = Image.createFromBase64(Base64);
@@ -119,10 +119,11 @@ public class AuditProcessImage1 {
             }catch(IOException e){
                 e.printStackTrace();
             }
-
-        } catch (IOException | BPMException e) {
+*/
+        } catch (BPMException e) {
             e.printStackTrace();
         }
+
     }
 
     private static void writeToFile(InputStream istream, String outputFilePath) throws IOException {

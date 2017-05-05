@@ -14,8 +14,9 @@
 
         <!--
         <mdw.home>/u01/app/oracle/fmw/12.2</mdw.home>
-        -->
         <mdw.home>I:\Middleware12c\Oracle_Home</mdw.home>
+        -->
+        <mdw.home>E:\Oracle\MiddlewareBPM12210</mdw.home>
         <spring.version>4.2.5.RELEASE</spring.version>
         <jstl.version>1.2</jstl.version>
         <servletapi.version>2.5</servletapi.version>

@@ -14,6 +14,10 @@ public class CEvent {
         this.setState(e.getState());
     }
 
+    public CEvent(){
+
+    }
+
     public String getDate() {
         return date;
     }

@@ -98,6 +98,19 @@ public class MainBPELPreview {
         }
     }
 
+
+    /**
+     * Function to build bpm image diagram
+     * @param bpmid The bpelid of the instance
+     * @throws Exception
+     */
+    public byte[] buildBpmGraphImage(String bpmid, String type) throws Exception {
+        ServerConnection serverConnection = new ServerConnection(server,user,pass, realm);
+        AuditProcessImage auditProcessImage = new AuditProcessImage(serverConnection);
+
+        return auditProcessImage.getBpmDiagrama(bpmid, type );
+    }
+
     public MermaidJSGraphBuilder getBpelFlowChartController() {
         return bpelFlowChartController;
     }

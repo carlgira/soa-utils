@@ -1,0 +1,27 @@
+graph LR
+init_Start((Begin))
+obj_ExclusiveGateway{"Condition?"}
+ws_ServiceTask>Service]
+obj_ScriptTask1>Approve Task]
+ht_UserTask(Human Task)
+fn_End((End))
+
+init_Start-->obj_ExclusiveGateway
+obj_ExclusiveGateway-->ws_ServiceTask
+obj_ExclusiveGateway-->ht_UserTask
+obj_ExclusiveGateway-->obj_ScriptTask1
+ws_ServiceTask-->fn_End
+ht_UserTask-->fn_End
+obj_ScriptTask1-->fn_End
+
+classDef ht fill:#A8CB6A,stroke:#333;
+classDef ws fill:#6EABD0,stroke:#333;
+classDef obj fill:#D4D4D4,stroke:#333;
+classDef obj_info fill:#FFCE44,stroke:#333;
+classDef htError fill:#A8CB6A,stroke:#FF0000,stroke-width:3px;
+classDef wsError fill:#6EABD0,stroke:#FF0000,stroke-width:3px;
+
+class obj_ScriptTask1 obj_info;
+class init_Start,fn_End obj;
+
+linkStyle 0 stroke-width:2px,fill:none,stroke:green,stroke-dasharray: 5, 5;

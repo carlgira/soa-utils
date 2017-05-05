@@ -28,10 +28,10 @@ public class MermaidJSGraphTest {
 
     public String testMermaidGraph(CompositeDN compositeDN, String bpel, String bpelid ) throws Exception {
 
-        String server = prop.getProperty("server");
-        String user = prop.getProperty("user");
-        String pass = prop.getProperty("password");
-        String realm = prop.getProperty("realm");
+        String server = "t3://localhost:7003/soa-infra/";
+        String user = "weblogic";
+        String pass = "WELCOME1";
+        String realm = "jazn.com";
 
         ServerConnection serverConnection = new ServerConnection(server,user,pass, realm);
 
@@ -72,9 +72,16 @@ public class MermaidJSGraphTest {
 
         //DOC.AltaUnidadesOfertantes.last.AltaUnidadesOfertantes
 
+/*
         CompositeDN compositeDN = new CompositeDN("default/TestProject!1.0");
         String bpel = "TestBpel";
-        String bpelid = "40002";
+        String bpelid = "20002";
+*/
+
+
+        CompositeDN compositeDN = new CompositeDN("default/BpmProject!1.0");
+        String bpel = "Process";
+        String bpelid = "10014";
 
 
         MermaidJSGraphTest bpelFlowChartPreviewTest = new MermaidJSGraphTest();
