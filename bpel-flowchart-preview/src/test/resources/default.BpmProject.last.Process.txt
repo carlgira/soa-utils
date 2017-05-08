@@ -1,17 +1,17 @@
 graph LR
 init_Start((Begin))
 obj_ExclusiveGateway{"Condition?"}
-ws_ServiceTask>Service]
-obj_ScriptTask1>Approve Task]
-ht_UserTask(Human Task)
+ws_ServiceTask[Service]
+obj_ScriptTask1>Info]
+ht_Humantask1(Human Task)
 fn_End((End))
 
 init_Start-->obj_ExclusiveGateway
 obj_ExclusiveGateway-->ws_ServiceTask
-obj_ExclusiveGateway-->ht_UserTask
+obj_ExclusiveGateway-->ht_Humantask1
 obj_ExclusiveGateway-->obj_ScriptTask1
 ws_ServiceTask-->fn_End
-ht_UserTask-->fn_End
+ht_Humantask1-->fn_End
 obj_ScriptTask1-->fn_End
 
 classDef ht fill:#A8CB6A,stroke:#333;
