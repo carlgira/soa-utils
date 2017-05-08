@@ -16,10 +16,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import java.util.EnumMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 import com.carlgira.util.ServerConnection;
 import oracle.bpel.services.bpm.common.IBPMContext;
@@ -32,6 +31,8 @@ import oracle.bpm.services.instancequery.IInstanceQueryService;
 import oracle.bpm.ui.Image;
 import oracle.bpm.ui.utils.ImageExtension;
 import oracle.bpm.ui.utils.ImageIOFacade;
+
+import javax.imageio.ImageIO;
 
 public class AuditProcessImage {
 
@@ -85,29 +86,22 @@ public class AuditProcessImage {
 
         BPMServiceClientFactory bpmServiceClientFactory = getBPMServiceClientFactory();
         IBPMContext bpmContext;
-        String Base64 = null;
+        String base64 = null;
         try {
             bpmContext = bpmServiceClientFactory.getBPMUserAuthenticationService().getBPMContextForAuthenticatedUser();
             IInstanceQueryService instanceQueryService =
                     bpmServiceClientFactory.getBPMServiceClient().getInstanceQueryService();
             if (imageType.equals(IMAGE_TYPE.PROCESS)) {
-                Base64 = instanceQueryService.getProcessDiagram(bpmContext, instanceId, Locale.US);
+                base64 = instanceQueryService.getProcessDiagram(bpmContext, instanceId, Locale.US);
             } else if (imageType.equals(IMAGE_TYPE.AUDIT)) {
-                Base64 = instanceQueryService.getProcessAuditDiagram(bpmContext, instanceId, Locale.US);
+                base64 = instanceQueryService.getProcessAuditDiagram(bpmContext, instanceId, Locale.US);
             }
         } catch (BPMException e) {
             e.printStackTrace();
         }
 
         try {
-            Image image = Image.createFromBase64(Base64);
-            BufferedImage bufferedImage = (BufferedImage) image.asAwtImage();
-
-
-            WritableRaster raster = bufferedImage .getRaster();
-            DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
-
-            return data.getData();
+            return Base64.getDecoder().decode(new String(base64).getBytes("UTF-8"));
         } catch (IOException e) {
             e.printStackTrace();
         }

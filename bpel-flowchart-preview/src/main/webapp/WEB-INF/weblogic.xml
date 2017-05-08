@@ -25,5 +25,12 @@
     <wls:library-ref>
         <wls:library-name>oracle.bpm.client</wls:library-name>
     </wls:library-ref>
+    <wls:library-ref>
+        <wls:library-name>oracle.bpm.workspace</wls:library-name>
+    </wls:library-ref>
+    <wls:library-ref>
+        <wls:library-name>oracle.bpm.runtime</wls:library-name>
+    </wls:library-ref>
+    <!-- For bpm only, comment this line for SOA only envs -->
 
 </wls:weblogic-web-app>

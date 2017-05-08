@@ -75,19 +75,28 @@
             <scope>system</scope>
             <systemPath>${mdw.home}/soa/bpm/modules/oracle.bpm.mgmt_11.1.1/oracle.bpm.bpmn-em-tools.jar</systemPath>
         </dependency>
+        <!-- BPM dependencies -->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.9</version>
         </dependency>
-
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>bpm-em-tools</artifactId>
+            <artifactId>bpm-ui</artifactId>
             <version>${soa-version}</version>
             <scope>system</scope>
-            <systemPath>${mdw.home}/soa/bpm/modules/oracle.bpm.mgmt_11.1.1/oracle.bpm.bpmn-em-tools.jar</systemPath>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.bpm.workspace_11.1.1/oracle.bpm.ui.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>bpm-core</artifactId>
+            <version>${soa-version}</version>
+            <scope>system</scope>
+            <systemPath>${mdw.home}/soa/soa/modules/oracle.bpm.runtime_11.1.1/oracle.bpm.core.jar</systemPath>
+        </dependency>
+        <!-- BPM dependencies -->
+
 
         <!-- Testing Dependencies -->
         <!--
@@ -155,7 +164,6 @@
             <systemPath>${mdw.home}/oracle_common/webservices/wsclient_extended.jar</systemPath>
         </dependency>
         -->
-
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>weblogic</artifactId>
