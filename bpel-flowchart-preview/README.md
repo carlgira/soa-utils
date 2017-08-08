@@ -24,13 +24,13 @@
 
 **Edit the file bpel-flowchart-preview.properties. The properties "server", "user", "password", "realm" and "graph_dir".**
 
-server=t3://localhost:8001/soa-infra/
-user=weblogic
-password=weblogic
-realm=jazn.com
-graph_dir=/home/oracle/soa-server/config/graph_dir
+server=t3://localhost:8001/soa-infra/ </br>
+user=weblogic </br>
+password=weblogic </br>
+realm=jazn.com </br>
+graph_dir=/home/oracle/soa-server/config/graph_dir </br>
 
-**Add in weblogic startup the property bpel-flowchart-preview with the path of the bpel-flowchart-preview.properties file.**
+**Add in weblogic startup the property bpel-flowchart-preview with the path of the bpel-flowchart-preview.properties file.** </br>
 	-Dbpel-flowchart-preview=/home/oracle/soa-server/config/bpel-flowchart-preview.properties
 
 **Install the war in Weblogic bpel-flowchart-preview-1.0.war.**
