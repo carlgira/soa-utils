@@ -46,8 +46,6 @@ La utilidad de mermaid viene distribuida con npm y requiere la instalación de l
     npm install <font>-</font>g mermaid
 
 
-En OMIE por temas de seguridad se utiliza el modo portable.
-
 Como usar utilidad de línea de comandos de Mermaid.js
 -----------------------------------------------------
 
