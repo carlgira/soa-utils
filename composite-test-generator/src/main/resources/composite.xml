@@ -20,7 +20,7 @@
         <implementation.bpel src="ModificacionUnidadesFisicas.bpel"/>
         <property name="bpel.config.sensorLocation">ModificacionUnidadesFisicas_sensor.xml</property>
         <property name="bpel.config.sensorActionLocation">ModificacionUnidadesFisicas_sensorAction.xml</property>
-        <property name="bpel.preference.emailsTo">ralburquerque@omie.es,jhornos@omie.es,jbogas@omie.es</property>
+        <property name="bpel.preference.emailsTo">xx@email.com</property>
     </component>
     <component name="FYI">
         <implementation.workflow src="FYI/FYI.task"/>
